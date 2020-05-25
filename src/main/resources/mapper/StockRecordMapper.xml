@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiaxin.shop.dao.StockRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.jiaxin.shop.pojo.StockRecord" >
+    <id column="stock_record_id" property="stockRecordId" jdbcType="INTEGER" />
+    <result column="stock_id" property="stockId" jdbcType="INTEGER" />
+    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
+    <result column="stock_num_old" property="stockNumOld" jdbcType="DECIMAL" />
+    <result column="stock_num_new" property="stockNumNew" jdbcType="DECIMAL" />
+    <result column="record_change" property="recordChange" jdbcType="DECIMAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    stock_record_id, stock_id, record_time, stock_num_old, stock_num_new, record_change
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_record
+    where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stock_record
+    where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jiaxin.shop.pojo.StockRecord" >
+    insert into stock_record (stock_record_id, stock_id, record_time, 
+      stock_num_old, stock_num_new, record_change
+      )
+    values (#{stockRecordId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP}, 
+      #{stockNumOld,jdbcType=DECIMAL}, #{stockNumNew,jdbcType=DECIMAL}, #{recordChange,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiaxin.shop.pojo.StockRecord" >
+    insert into stock_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockRecordId != null" >
+        stock_record_id,
+      </if>
+      <if test="stockId != null" >
+        stock_id,
+      </if>
+      <if test="recordTime != null" >
+        record_time,
+      </if>
+      <if test="stockNumOld != null" >
+        stock_num_old,
+      </if>
+      <if test="stockNumNew != null" >
+        stock_num_new,
+      </if>
+      <if test="recordChange != null" >
+        record_change,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockRecordId != null" >
+        #{stockRecordId,jdbcType=INTEGER},
+      </if>
+      <if test="stockId != null" >
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="recordTime != null" >
+        #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockNumOld != null" >
+        #{stockNumOld,jdbcType=DECIMAL},
+      </if>
+      <if test="stockNumNew != null" >
+        #{stockNumNew,jdbcType=DECIMAL},
+      </if>
+      <if test="recordChange != null" >
+        #{recordChange,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiaxin.shop.pojo.StockRecord" >
+    update stock_record
+    <set >
+      <if test="stockId != null" >
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="recordTime != null" >
+        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="stockNumOld != null" >
+        stock_num_old = #{stockNumOld,jdbcType=DECIMAL},
+      </if>
+      <if test="stockNumNew != null" >
+        stock_num_new = #{stockNumNew,jdbcType=DECIMAL},
+      </if>
+      <if test="recordChange != null" >
+        record_change = #{recordChange,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiaxin.shop.pojo.StockRecord" >
+    update stock_record
+    set stock_id = #{stockId,jdbcType=INTEGER},
+      record_time = #{recordTime,jdbcType=TIMESTAMP},
+      stock_num_old = #{stockNumOld,jdbcType=DECIMAL},
+      stock_num_new = #{stockNumNew,jdbcType=DECIMAL},
+      record_change = #{recordChange,jdbcType=DECIMAL}
+    where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
+  </update>
+</mapper>

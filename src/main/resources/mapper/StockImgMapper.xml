@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiaxin.shop.dao.StockImgMapper" >
+  <resultMap id="BaseResultMap" type="com.jiaxin.shop.pojo.StockImg" >
+    <id column="stock_img_id" property="stockImgId" jdbcType="INTEGER" />
+    <result column="stock_img_src" property="stockImgSrc" jdbcType="VARCHAR" />
+    <result column="stock_id" property="stockId" jdbcType="INTEGER" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    stock_img_id, stock_img_src, stock_id, state, remark
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from stock_img
+    where stock_img_id = #{stockImgId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from stock_img
+    where stock_img_id = #{stockImgId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jiaxin.shop.pojo.StockImg" >
+    insert into stock_img (stock_img_id, stock_img_src, stock_id, 
+      state, remark)
+    values (#{stockImgId,jdbcType=INTEGER}, #{stockImgSrc,jdbcType=VARCHAR}, #{stockId,jdbcType=INTEGER}, 
+      #{state,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiaxin.shop.pojo.StockImg" >
+    insert into stock_img
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockImgId != null" >
+        stock_img_id,
+      </if>
+      <if test="stockImgSrc != null" >
+        stock_img_src,
+      </if>
+      <if test="stockId != null" >
+        stock_id,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockImgId != null" >
+        #{stockImgId,jdbcType=INTEGER},
+      </if>
+      <if test="stockImgSrc != null" >
+        #{stockImgSrc,jdbcType=VARCHAR},
+      </if>
+      <if test="stockId != null" >
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiaxin.shop.pojo.StockImg" >
+    update stock_img
+    <set >
+      <if test="stockImgSrc != null" >
+        stock_img_src = #{stockImgSrc,jdbcType=VARCHAR},
+      </if>
+      <if test="stockId != null" >
+        stock_id = #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where stock_img_id = #{stockImgId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiaxin.shop.pojo.StockImg" >
+    update stock_img
+    set stock_img_src = #{stockImgSrc,jdbcType=VARCHAR},
+      stock_id = #{stockId,jdbcType=INTEGER},
+      state = #{state,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR}
+    where stock_img_id = #{stockImgId,jdbcType=INTEGER}
+  </update>
+</mapper>
