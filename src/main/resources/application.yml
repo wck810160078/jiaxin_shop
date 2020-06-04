@@ -56,6 +56,12 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+#上传图片路径-本地
+upload-file-path: E:\jiaxin\images
+
+#上传图片路径-远程服务器
+#upload-file-path: \home\jiaxin\images
+
 #redis:
 #  port: 6379
 #  host: r-wz9esx9x23tl8nvpblpd.redis.rds.aliyuncs.com

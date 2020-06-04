@@ -249,9 +249,12 @@
               <if test="paramObj.stockSearchContent != null">
                 and stock_name like #{paramObj.stockSearchContent,jdbcType=VARCHAR}
               </if>
-                <if test="paramObj.state != null">
+              <if test="paramObj.state != null">
                 and state = #{paramObj.state,jdbcType=VARCHAR}
               </if>
+            <if test="paramObj.stockNow != null">
+              and stock_now != #{paramObj.stockNow,jdbcType=VARCHAR}
+            </if>
           </where>
           <if test="page != null and size != null">
               limit #{page},#{size}
@@ -273,6 +276,9 @@
       </if>
       <if test="state != null">
         and state = #{state,jdbcType=VARCHAR}
+      </if>
+      <if test="stockNow != null">
+        and stock_now != #{stockNow,jdbcType=VARCHAR}
       </if>
     </where>
   </select>
