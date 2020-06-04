@@ -21,7 +21,7 @@ public class StockImgController {
 
     /**
      * @Author chenting
-     * @Description //TODO 上传图片文件到本地/服务器
+     * @Description // 上传图片文件到本地/服务器
      * @Date 12:36 2020/6/4
      * @Param [stockImgFile]
      * @return java.lang.String
@@ -32,7 +32,7 @@ public class StockImgController {
 
     /**
      * @Author chenting
-     * @Description //TODO 新增库存图片信息
+     * @Description // 新增库存图片信息
      * @Date 12:36 2020/6/4
      * @Param [stockImgFile, stockId]
      * @return com.jiaxin.shop.utils.Msg

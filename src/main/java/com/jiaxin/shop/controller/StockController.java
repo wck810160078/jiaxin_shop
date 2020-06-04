@@ -21,7 +21,7 @@ public class StockController {
 
     /**
      * @Author chenting
-     * @Description //TODO 新增库存信息 
+     * @Description // 新增库存信息 
      * @Date 20:10 2020/5/26
      * @Param [stock]
      * @return com.jiaxin.shop.utils.Msg
@@ -36,7 +36,7 @@ public class StockController {
 
     /**
      * @Author chenting
-     * @Description //TODO  根据标签（产品、原材料、包装材料）获取库存信息
+     * @Description //  根据标签（产品、原材料、包装材料）获取库存信息
      * @Date 23:46 2020/5/27
      * @Param [stockPageData]
      * @return com.jiaxin.shop.utils.Msg
@@ -51,7 +51,7 @@ public class StockController {
 
     /**
      * @Author chenting
-     * @Description //TODO 批量修改库存信息状态
+     * @Description // 批量修改库存信息状态
      * @Date 21:59 2020/6/4
      * @Param [stockIds, state] state:修改后的状态
      * @return com.jiaxin.shop.utils.Msg
@@ -66,7 +66,7 @@ public class StockController {
 
     /**
      * @Author chenting
-     * @Description //TODO 导入库存信息 
+     * @Description // 导入库存信息 
      * @Date 17:50 2020/5/29
      * @Param [excelFile]
      * @return com.jiaxin.shop.utils.Msg
@@ -78,7 +78,7 @@ public class StockController {
 
     /**
      * @Author chenting
-     * @Description //TODO 导出库存信息
+     * @Description // 导出库存信息
      * @Date 23:20 2020/6/1
      * @Param [label]
      * @return com.jiaxin.shop.utils.Msg

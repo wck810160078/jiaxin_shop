@@ -32,7 +32,7 @@ public class StockService {
 
     /**
      * @Author chenting
-     * @Description //TODO 新增库存信息 
+     * @Description  新增库存信息 
      * @Date 23:23 2020/5/27
      * @Param [stock]
      * @return com.jiaxin.shop.utils.Msg
@@ -47,7 +47,7 @@ public class StockService {
 
     /**
      * @Author chenting
-     * @Description //TODO 根据标签获取库存列表 
+     * @Description  根据标签获取库存列表 
      * @Date 20:36 2020/5/28
      * @Param [stockPageData]
      * @return com.jiaxin.shop.utils.Msg
@@ -72,7 +72,7 @@ public class StockService {
 
     /**
      * @Author chenting
-     * @Description //TODO 导入库存信息 
+     * @Description  导入库存信息 
      * @Date 22:47 2020/6/1
      * @Param [excelFile, label]
      * @return com.jiaxin.shop.utils.Msg
@@ -180,7 +180,7 @@ public class StockService {
 
     /**
      * @Author chenting
-     * @Description //TODO 导出库存信息
+     * @Description  导出库存信息
      * @Date 23:21 2020/6/1
      * @Param [label]
      * @return com.jiaxin.shop.utils.Msg
@@ -337,7 +337,7 @@ public class StockService {
 
     /**
      * @Author chenting
-     * @Description //TODO 批量修改库存信息的状态
+     * @Description  批量修改库存信息的状态
      * @Date 21:58 2020/6/4
      * @Param [stockIds, state] state:修改后的状态
      * @return com.jiaxin.shop.utils.Msg
