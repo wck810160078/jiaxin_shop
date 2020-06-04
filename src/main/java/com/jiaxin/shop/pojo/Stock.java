@@ -88,6 +88,17 @@ public class Stock {
      */
     private String remark;
 
+    //以下为自定义属性
+    private String stockSearchContent ;
+
+    public String getStockSearchContent() {
+        return stockSearchContent;
+    }
+
+    public void setStockSearchContent(String stockSearchContent) {
+        this.stockSearchContent = stockSearchContent;
+    }
+
     /**
      * 库存ID
      * @return stock_id 库存ID
@@ -358,5 +369,45 @@ public class Stock {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
+    }
+
+    public Stock(String stockName, String stockType, String unit, String supplier, Integer stockInitial, Integer stockNow, Integer stockLowest, Double retailPrice, Double purchasePrice, Double wholesalePrice, String label, String introduction,String state, String remark) {
+        this.stockName = stockName;
+        this.stockType = stockType;
+        this.unit = unit;
+        this.supplier = supplier;
+        this.stockInitial = stockInitial;
+        this.stockNow = stockNow;
+        this.stockLowest = stockLowest;
+        this.retailPrice = retailPrice;
+        this.purchasePrice = purchasePrice;
+        this.wholesalePrice = wholesalePrice;
+        this.label = label;
+        this.introduction = introduction;
+        this.state = state;
+        this.remark = remark;
+    }
+
+//    public Stock(Integer stockId, String stockName, String stockType, String unit, String supplier, Integer stockInitial, Integer stockNow, Integer stockLowest, Double retailPrice, Double purchasePrice, Double wholesalePrice, String label, String introduction, Date creatTime, Date updateTime, String state, String remark) {
+//        this.stockId = stockId;
+//        this.stockName = stockName;
+//        this.stockType = stockType;
+//        this.unit = unit;
+//        this.supplier = supplier;
+//        this.stockInitial = stockInitial;
+//        this.stockNow = stockNow;
+//        this.stockLowest = stockLowest;
+//        this.retailPrice = retailPrice;
+//        this.purchasePrice = purchasePrice;
+//        this.wholesalePrice = wholesalePrice;
+//        this.label = label;
+//        this.introduction = introduction;
+//        this.creatTime = creatTime;
+//        this.updateTime = updateTime;
+//        this.state = state;
+//        this.remark = remark;
+//    }
+
+    public Stock() {
     }
 }

@@ -232,4 +232,58 @@
       remark = #{remark,jdbcType=VARCHAR}
     where stock_id = #{stockId,jdbcType=INTEGER}
   </update>
+
+
+
+
+  <!--  根据条件分页查询库存信息-->
+  <select id="getStockListByLabel" resultType="com.jiaxin.shop.pojo.Stock" parameterType="com.jiaxin.shop.utils.PageData" >
+      select * from stock
+          <where>
+              <if test="paramObj.stockType != null">
+                  stock_type = #{paramObj.stockType,jdbcType=VARCHAR}
+              </if>
+              <if test="paramObj.label != null">
+                  and label = #{paramObj.label,jdbcType=VARCHAR}
+              </if>
+              <if test="paramObj.stockSearchContent != null">
+                and stock_name like #{paramObj.stockSearchContent,jdbcType=VARCHAR}
+              </if>
+                <if test="paramObj.state != null">
+                and state = #{paramObj.state,jdbcType=VARCHAR}
+              </if>
+          </where>
+          <if test="page != null and size != null">
+              limit #{page},#{size}
+          </if>
+  </select>
+
+  <!--  根据条件查询库存信息数量-->
+  <select id="getStockCountByLabel" parameterType="com.jiaxin.shop.pojo.Stock" resultType="Long" >
+    select count(*) from stock
+    <where>
+      <if test="stockType != null">
+        stock_type = #{stockType,jdbcType=VARCHAR}
+      </if>
+      <if test="label != null">
+        and label = #{label,jdbcType=VARCHAR}
+      </if>
+      <if test="stockSearchContent != null">
+        and stock_name like #{stockSearchContent,jdbcType=VARCHAR}
+      </if>
+      <if test="state != null">
+        and state = #{state,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </select>
+
+  <!--  根据库存名称查询库存信息-->
+  <select id="getStockByName" resultType="com.jiaxin.shop.pojo.Stock" parameterType="String" >
+    select * from stock where stock_name = #{stockName,jdbcType=VARCHAR}
+  </select>
+
+  <!--  根据标签查询库存信息-->
+  <select id="getExportStockListByLabel" resultType="com.jiaxin.shop.pojo.Stock" parameterType="String" >
+    select * from stock where label = #{label,jdbcType=VARCHAR}
+  </select>
 </mapper>

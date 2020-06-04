@@ -24,19 +24,15 @@ public class BaseUtil {
         if(objs.length==0){
             return true;
         }
-
         String s;
         for (Object o : objs){
             if(o==null){
                 return true;
             }
-
             s = o.toString();
             if("".equals(s)||"none".equals(s)||"null".equals(s)){
                 return true;
             }
-
-
         }
         return false;
     }
