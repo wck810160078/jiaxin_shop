@@ -17,7 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.FileOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -185,7 +186,7 @@ public class StockService {
      * @Param [label]
      * @return com.jiaxin.shop.utils.Msg
      **/
-    public Msg exportStocks(String label) throws IOException {
+    public XSSFWorkbook exportStocks(String label, HttpServletRequest request, HttpServletResponse response) throws IOException {
         //获取要导出的库存信息
         List<Stock> stockList = stockMapper.getExportStockListByLabel(label) ;
         //创建工作簿对象
@@ -279,60 +280,66 @@ public class StockService {
             //货品类别单元格
             XSSFCell xssfCellContent1 = xssfRowContent.createCell(1) ;
             xssfCellContent1.setCellStyle(xssfCellStyleContent);
-            xssfCellContent1.setCellValue(stock.getStockType());
+            xssfCellContent1.setCellValue(stock.getStockType() == null ? "" :stock.getStockType());
             //主计量单位单元格
             XSSFCell xssfCellContent2 = xssfRowContent.createCell(2) ;
             xssfCellContent2.setCellStyle(xssfCellStyleContent);
-            xssfCellContent2.setCellValue(stock.getUnit());
+            xssfCellContent2.setCellValue(stock.getUnit() == null ? "" :stock.getUnit());
             //货品介绍单元格
             XSSFCell xssfCellContent3 = xssfRowContent.createCell(3) ;
             xssfCellContent3.setCellStyle(xssfCellStyleContent);
-            xssfCellContent3.setCellValue(stock.getIntroduction());
+            xssfCellContent3.setCellValue(stock.getIntroduction() == null ? "" :stock.getIntroduction());
             //进货价单元格
             XSSFCell xssfCellContent4 = xssfRowContent.createCell(4) ;
             xssfCellContent4.setCellStyle(xssfCellStyleContent);
-            xssfCellContent4.setCellValue(stock.getPurchasePrice());
+            xssfCellContent4.setCellValue(stock.getPurchasePrice() == null ? 0.0 :stock.getPurchasePrice());
             //零售价单元格
             XSSFCell xssfCellContent5 = xssfRowContent.createCell(5) ;
             xssfCellContent5.setCellStyle(xssfCellStyleContent);
-            xssfCellContent5.setCellValue(stock.getRetailPrice());
+            xssfCellContent5.setCellValue(stock.getRetailPrice() == null ? 0.0 :stock.getRetailPrice());
             //批发价单元格
             XSSFCell xssfCellContent6 = xssfRowContent.createCell(6) ;
             xssfCellContent6.setCellStyle(xssfCellStyleContent);
-            xssfCellContent6.setCellValue(stock.getWholesalePrice());
+            xssfCellContent6.setCellValue(stock.getWholesalePrice() == null ? 0.0 :stock.getWholesalePrice());
             //供货商单元格
             XSSFCell xssfCellContent7 = xssfRowContent.createCell(7) ;
             xssfCellContent7.setCellStyle(xssfCellStyleContent);
-            xssfCellContent7.setCellValue(stock.getSupplier());
+            xssfCellContent7.setCellValue(stock.getSupplier() == null ? "" :stock.getSupplier());
             //当前库存数量单元格
             XSSFCell xssfCellContent8 = xssfRowContent.createCell(8) ;
             xssfCellContent8.setCellStyle(xssfCellStyleContent);
-            xssfCellContent8.setCellValue(stock.getStockNow());
+            xssfCellContent8.setCellValue(stock.getStockNow() == null ? 0.0 :stock.getStockNow());
             //最低库存数量单元格
             XSSFCell xssfCellContent9 = xssfRowContent.createCell(9) ;
             xssfCellContent9.setCellStyle(xssfCellStyleContent);
-            xssfCellContent9.setCellValue(stock.getStockLowest());
+            xssfCellContent9.setCellValue(stock.getStockLowest() == null ? 0.0 :stock.getStockLowest());
             //备注单元格
             XSSFCell xssfCellContent10 = xssfRowContent.createCell(10) ;
             xssfCellContent10.setCellStyle(xssfCellStyleContent);
-            xssfCellContent10.setCellValue(stock.getRemark());
+            xssfCellContent10.setCellValue(stock.getRemark() == null ? "" :stock.getRemark());
             //创建时间单元格
             XSSFCell xssfCellContent11 = xssfRowContent.createCell(11) ;
             xssfCellContent11.setCellStyle(xssfCellStyleContent);
-            xssfCellContent11.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getCreatTime()));
+            xssfCellContent11.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getCreatTime() == null ? new Date() :stock.getCreatTime()));
             //上次修改时间单元格
             XSSFCell xssfCellContent12 = xssfRowContent.createCell(12) ;
             xssfCellContent12.setCellStyle(xssfCellStyleContent);
-            xssfCellContent12.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getUpdateTime()));
+            xssfCellContent12.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getUpdateTime() == null ? new Date() :stock.getUpdateTime()));
         }
 
         //文档输出
-        FileOutputStream out = new FileOutputStream("F:/湖南佳鑫食品工业有限公司/库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx");
-        xssfWorkbook.write(out);
-        out.close();
-
-        return Msg.success("导出成功") ;
-
+//        FileOutputStream out = new FileOutputStream("/库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx");
+//        xssfWorkbook.write(out);
+//        out.close();
+//
+//        return Msg.success("导出成功") ;
+//        OutputStream os = response.getOutputStream();// 取得输出流
+//        String fileName = "库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx" ;
+//        response.setContentType("application/octet-stream");
+//        response.setHeader("Content-disposition", "attachment;filename="+fileName);//默认Excel名称
+//        response.flushBuffer();
+//        xssfWorkbook.write(os);
+        return xssfWorkbook ;
     }
 
     /**
