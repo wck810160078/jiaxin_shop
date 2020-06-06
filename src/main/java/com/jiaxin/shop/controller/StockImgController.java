@@ -26,8 +26,13 @@ public class StockImgController {
      * @Param [stockImgFile]
      * @return java.lang.String
      **/
-    public String uploadStockImg(MultipartFile stockImgFile) throws IOException {
-        return stockImgService.uploadStockImg(stockImgFile) ;
+    @PostMapping("uploadStockImg")
+    public Msg uploadStockImg(MultipartFile stockImgFile) throws IOException {
+        if(stockImgFile == null) {
+            return Msg.fail("请至少上传一张图片！") ;
+        }
+        String outFile = stockImgService.uploadStockImg(stockImgFile) ;
+        return outFile == null ? Msg.fail("上传图片失败") : Msg.success("上传图片成功").setResp(outFile);
     }
 
     /**
@@ -37,15 +42,11 @@ public class StockImgController {
      * @Param [stockImgFile, stockId]
      * @return com.jiaxin.shop.utils.Msg
      **/
-    @PostMapping("staff/saveStockImg")
-    public Msg saveStockImg(@RequestParam MultipartFile stockImgFile,Integer stockId) throws IOException {
-        if(stockImgFile == null) {
-            return Msg.fail("缺少关键参数") ;
-        }
-        String stockImgSrc = uploadStockImg(stockImgFile) ;
-        StockImg stockImg = new StockImg() ;
-        stockImg.setStockId(stockId);
-        stockImg.setStockImgSrc(stockImgSrc);
-        return stockImgService.saveStockImg(stockImg) ;
-    }
+//    public Msg saveStockImg(@RequestParam MultipartFile stockImgFile,Integer stockId) throws IOException {
+//        String stockImgSrc = uploadStockImg(stockImgFile) ;
+//        StockImg stockImg = new StockImg() ;
+//        stockImg.setStockId(stockId);
+//        stockImg.setStockImgSrc(stockImgSrc);
+//        return stockImgService.saveStockImg(stockImg) ;
+//    }
 }

@@ -1,8 +1,11 @@
 package com.jiaxin.shop.service;
 
+import com.jiaxin.shop.dao.StockImgMapper;
 import com.jiaxin.shop.dao.StockMapper;
 import com.jiaxin.shop.pojo.Stock;
+import com.jiaxin.shop.pojo.StockImg;
 import com.jiaxin.shop.utils.BaseUtil;
+import com.jiaxin.shop.utils.ExcelUtil;
 import com.jiaxin.shop.utils.Msg;
 import com.jiaxin.shop.utils.PageData;
 import org.apache.poi.hssf.usermodel.*;
@@ -19,7 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +37,9 @@ public class StockService {
     @Resource
     private StockMapper stockMapper ;
 
+    @Resource
+    private StockImgMapper stockImgMapper ;
+
     /**
      * @Author chenting
      * @Description  新增库存信息 
@@ -38,12 +47,32 @@ public class StockService {
      * @Param [stock]
      * @return com.jiaxin.shop.utils.Msg
      **/
-    public Msg saveStock(Stock stock) {
+    public Msg saveStock(Stock stock) throws Exception {
+        Integer stockId = stock.getStockId() ;
         //判断改条库存信息是否有id，如果有则修改，没有则新增
-        if(BaseUtil.isBlank(stock.getStockId())) {
-            return stockMapper.insertSelective(stock) == 0 ? Msg.fail("新增失败") : Msg.success("新增成功");
+        if(BaseUtil.isBlank(stockId)) {
+            if(stockMapper.insertStockSelective(stock) == 0) {
+                return Msg.fail("新增库存信息失败") ;
+            }
+            for(StockImg stockImg : stock.getStockImgList()) {
+                stockImg.setStockId(stock.getStockId());
+                if(stockImgMapper.insertSelective(stockImg) == 0) {
+                    throw new Exception("插入图片失败") ;
+                }
+            }
+            return Msg.success("新增库存信息成功") ;
+        }else {
+            if(stockImgMapper.closeImgByStockId(stockId) == 0) {
+                throw new Exception("修改图片失败") ;
+            }
+            for(StockImg stockImg : stock.getStockImgList()) {
+                stockImg.setStockId(stockId);
+                if(stockImgMapper.insertSelective(stockImg) == 0) {
+                    throw new Exception("插入图片失败") ;
+                }
+            }
+            return Msg.success("修改库存信息成功") ;
         }
-        return stockMapper.updateByPrimaryKeySelective(stock) == 0 ? Msg.fail("修改失败") : Msg.success("修改成功") ;
     }
 
     /**
@@ -186,159 +215,246 @@ public class StockService {
      * @Param [label]
      * @return com.jiaxin.shop.utils.Msg
      **/
-    public XSSFWorkbook exportStocks(String label, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public XSSFWorkbook exportStocks(String label, HttpServletRequest request, HttpServletResponse response,String title,String[] headers,String fileName) throws IOException {
         //获取要导出的库存信息
         List<Stock> stockList = stockMapper.getExportStockListByLabel(label) ;
+//        //表头
+//        String title = "库存信息_全部类别" ;
+//        //标题
+//        String[] headers = {"库存名称规格","货品类别","主计量单位","货品介绍","进货价","零售价","批发价","供货商","当前库存数量"
+//                ,"最低库存数量","备注","创建时间","上次修改时间"} ;
+
         //创建工作簿对象
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook() ;
         //创建工作表对象
         XSSFSheet xssfSheet = xssfWorkbook.createSheet("sheet1") ;
-        //创建行(表头行)
-        XSSFRow xssfRowHeader = xssfSheet.createRow(0) ;
-        //创建列（表头列）
-        XSSFCell xssfCellHeader = xssfRowHeader.createCell(0) ;
-        xssfCellHeader.setCellValue("库存信息_全部类别");
-//        合并单元格（合并列）
-//        CellRangeAddress(firstRow, lastRow, firstCol, lastCol)，参数的说明：
-//        firstRow 区域中第一个单元格的行号
-//        lastRow 区域中最后一个单元格的行号
-//        firstCol 区域中第一个单元格的列号
-//        lastCol 区域中最后一个单元格的列号
-        CellRangeAddress cellRangeAddressHeader = new CellRangeAddress(0,0,0,12) ;
-        xssfSheet.addMergedRegion(cellRangeAddressHeader);
-        //创建单元格样式（表头）
-        XSSFCellStyle xssfCellStyleHeader = xssfWorkbook.createCellStyle() ;
-        //设置单元格样式
-        xssfCellStyleHeader.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
-        xssfCellStyleHeader.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
-        //创建字体样式（表头）
-        XSSFFont xssfFontHeader = xssfWorkbook.createFont() ;
-        xssfFontHeader.setFontName("宋体");//设置字体名称
-        xssfFontHeader.setFontHeightInPoints((short) 18);//设置字号
-        xssfFontHeader.setBold(true);//加粗
-        xssfCellStyleHeader.setFont(xssfFontHeader);
-        xssfCellHeader.setCellStyle(xssfCellStyleHeader);
-
-        //创建行（标题行）
-        XSSFRow xssfRowTitle = xssfSheet.createRow(1) ;
-        String[] title = {"库存名称规格","货品类别","主计量单位","货品介绍","进货价","零售价","批发价","供货商","当前库存数量"
-                ,"最低库存数量","备注","创建时间","上次修改时间"} ;
-        //设置单元格宽度
-        xssfSheet.setColumnWidth(0,14*256);
-        xssfSheet.setColumnWidth(1,10*256);
-        xssfSheet.setColumnWidth(2,12*256);
-        xssfSheet.setColumnWidth(3,14*256);
-        xssfSheet.setColumnWidth(4,8*256);
-        xssfSheet.setColumnWidth(5,8*256);
-        xssfSheet.setColumnWidth(6,8*256);
-        xssfSheet.setColumnWidth(7,16*256);
-        xssfSheet.setColumnWidth(8,14*256);
-        xssfSheet.setColumnWidth(9,14*256);
-        xssfSheet.setColumnWidth(10,10*256);
-        xssfSheet.setColumnWidth(11,18*256);
-        xssfSheet.setColumnWidth(12,18*256);
-        //创建单元格样式（标题）
-        XSSFCellStyle xssfCellStyleTitle = xssfWorkbook.createCellStyle() ;
-        //设置单元格样式
-        xssfCellStyleTitle.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
-        xssfCellStyleTitle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
-        //创建字体样式（标题）
-        XSSFFont xssfFontTitle = xssfWorkbook.createFont() ;
-        xssfFontTitle.setFontName("宋体");//设置字体名称
-        xssfFontTitle.setFontHeightInPoints((short) 12);//设置字号
-        xssfFontTitle.setBold(true);//加粗
-        xssfCellStyleTitle.setFont(xssfFontTitle);
-        for (int i = 0 ; i < title.length ; i++) {
-            //创建列（标题列）
-            XSSFCell xssfCellTitle = xssfRowTitle.createCell(i) ;
-            xssfCellTitle.setCellValue(title[i]);
-            xssfCellTitle.setCellStyle(xssfCellStyleTitle);
-        }
-
-        //创建单元格样式（内容）
-        XSSFCellStyle xssfCellStyleContent = xssfWorkbook.createCellStyle() ;
-        //设置单元格样式
-        xssfCellStyleContent.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
-        xssfCellStyleContent.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
-        xssfCellStyleContent.setWrapText(true);//自动换行
-        //创建字体样式（内容）
-        XSSFFont xssfFontContent = xssfWorkbook.createFont() ;
-        xssfFontContent.setFontName("宋体");//设置字体名称
-        xssfFontContent.setFontHeightInPoints((short) 10);//设置字号
-
-        xssfCellStyleContent.setFont(xssfFontContent);
+        //设置表头
+        ExcelUtil.creatExcelTitle(xssfWorkbook,xssfSheet,title,headers.length -1);
+        //设置标题
+        ExcelUtil.creatExcelHeader(xssfWorkbook,xssfSheet,headers);
+        //设置内容
         Stock stock;
         for (int i = 0 ; i < stockList.size() ; i++ ) {
             //创建行（内容行）
             XSSFRow xssfRowContent = xssfSheet.createRow(i + 2) ;
             stock = stockList.get(i) ;
 
+            //设置数据格式
+            XSSFDataFormat xssfDataFormat = xssfWorkbook.createDataFormat();
+
             //库存名称规格单元格
             XSSFCell xssfCellContent0 = xssfRowContent.createCell(0) ;
-            xssfCellContent0.setCellStyle(xssfCellStyleContent);
-            xssfCellContent0.setCellValue(stock.getStockName());
+            xssfCellContent0.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent0.setCellValue(ExcelUtil.isNull(stock.getStockName()));
             //货品类别单元格
             XSSFCell xssfCellContent1 = xssfRowContent.createCell(1) ;
-            xssfCellContent1.setCellStyle(xssfCellStyleContent);
-            xssfCellContent1.setCellValue(stock.getStockType() == null ? "" :stock.getStockType());
+            xssfCellContent1.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false)) ;
+            xssfCellContent1.setCellValue(ExcelUtil.isNull(stock.getStockType()));
             //主计量单位单元格
             XSSFCell xssfCellContent2 = xssfRowContent.createCell(2) ;
-            xssfCellContent2.setCellStyle(xssfCellStyleContent);
-            xssfCellContent2.setCellValue(stock.getUnit() == null ? "" :stock.getUnit());
+            xssfCellContent2.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent2.setCellValue(ExcelUtil.isNull(stock.getUnit()));
             //货品介绍单元格
             XSSFCell xssfCellContent3 = xssfRowContent.createCell(3) ;
-            xssfCellContent3.setCellStyle(xssfCellStyleContent);
-            xssfCellContent3.setCellValue(stock.getIntroduction() == null ? "" :stock.getIntroduction());
+            xssfCellContent3.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent3.setCellValue(ExcelUtil.isNull(stock.getIntroduction()));
             //进货价单元格
             XSSFCell xssfCellContent4 = xssfRowContent.createCell(4) ;
-            xssfCellContent4.setCellStyle(xssfCellStyleContent);
-            xssfCellContent4.setCellValue(stock.getPurchasePrice() == null ? 0.0 :stock.getPurchasePrice());
+//            ExcelUtil.contentCellStyle(xssfWorkbook).setDataFormat(xssfDataFormat.getFormat("0.00")); //  两位小数
+            xssfCellContent4.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,true));
+            xssfCellContent4.setCellValue(ExcelUtil.isZero(stock.getPurchasePrice()));
             //零售价单元格
             XSSFCell xssfCellContent5 = xssfRowContent.createCell(5) ;
-            xssfCellContent5.setCellStyle(xssfCellStyleContent);
-            xssfCellContent5.setCellValue(stock.getRetailPrice() == null ? 0.0 :stock.getRetailPrice());
+//            ExcelUtil.contentCellStyle(xssfWorkbook).setDataFormat(xssfDataFormat.getFormat("0.00")); //  两位小数
+            xssfCellContent5.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,true));
+            xssfCellContent5.setCellValue(ExcelUtil.isZero(stock.getRetailPrice()));
             //批发价单元格
             XSSFCell xssfCellContent6 = xssfRowContent.createCell(6) ;
-            xssfCellContent6.setCellStyle(xssfCellStyleContent);
-            xssfCellContent6.setCellValue(stock.getWholesalePrice() == null ? 0.0 :stock.getWholesalePrice());
+//            ExcelUtil.contentCellStyle(xssfWorkbook).setDataFormat(xssfDataFormat.getFormat("0.00")); //  两位小数
+            xssfCellContent6.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,true));
+            xssfCellContent6.setCellValue(ExcelUtil.isZero(stock.getWholesalePrice()));
             //供货商单元格
             XSSFCell xssfCellContent7 = xssfRowContent.createCell(7) ;
-            xssfCellContent7.setCellStyle(xssfCellStyleContent);
-            xssfCellContent7.setCellValue(stock.getSupplier() == null ? "" :stock.getSupplier());
+            xssfCellContent7.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent7.setCellValue(ExcelUtil.isNull(stock.getSupplier()));
             //当前库存数量单元格
             XSSFCell xssfCellContent8 = xssfRowContent.createCell(8) ;
-            xssfCellContent8.setCellStyle(xssfCellStyleContent);
-            xssfCellContent8.setCellValue(stock.getStockNow() == null ? 0.0 :stock.getStockNow());
+            xssfCellContent8.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent8.setCellValue(ExcelUtil.isZero(stock.getStockNow()));
             //最低库存数量单元格
             XSSFCell xssfCellContent9 = xssfRowContent.createCell(9) ;
-            xssfCellContent9.setCellStyle(xssfCellStyleContent);
-            xssfCellContent9.setCellValue(stock.getStockLowest() == null ? 0.0 :stock.getStockLowest());
+            xssfCellContent9.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent9.setCellValue(ExcelUtil.isZero(stock.getStockLowest()));
             //备注单元格
             XSSFCell xssfCellContent10 = xssfRowContent.createCell(10) ;
-            xssfCellContent10.setCellStyle(xssfCellStyleContent);
-            xssfCellContent10.setCellValue(stock.getRemark() == null ? "" :stock.getRemark());
+            xssfCellContent10.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
+            xssfCellContent10.setCellValue(ExcelUtil.isNull(stock.getRemark()));
             //创建时间单元格
             XSSFCell xssfCellContent11 = xssfRowContent.createCell(11) ;
-            xssfCellContent11.setCellStyle(xssfCellStyleContent);
+            xssfCellContent11.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
             xssfCellContent11.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getCreatTime() == null ? new Date() :stock.getCreatTime()));
             //上次修改时间单元格
             XSSFCell xssfCellContent12 = xssfRowContent.createCell(12) ;
-            xssfCellContent12.setCellStyle(xssfCellStyleContent);
+            xssfCellContent12.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
             xssfCellContent12.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getUpdateTime() == null ? new Date() :stock.getUpdateTime()));
         }
 
-        //文档输出
-//        FileOutputStream out = new FileOutputStream("/库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx");
-//        xssfWorkbook.write(out);
-//        out.close();
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+
+//        ExcelUtil.writeExcel(xssfWorkbook,os);
+
+        ExcelUtil.writeExcel(response,xssfWorkbook,os,fileName);
+
+
+
+
+
+        //        //创建行(表头行)
+//        XSSFRow xssfRowHeader = xssfSheet.createRow(0) ;
+//        //创建列（表头列）
+//        XSSFCell xssfCellHeader = xssfRowHeader.createCell(0) ;
+//        xssfCellHeader.setCellValue("库存信息_全部类别");
+////        合并单元格（合并列）
+////        CellRangeAddress(firstRow, lastRow, firstCol, lastCol)，参数的说明：
+////        firstRow 区域中第一个单元格的行号
+////        lastRow 区域中最后一个单元格的行号
+////        firstCol 区域中第一个单元格的列号
+////        lastCol 区域中最后一个单元格的列号
+//        CellRangeAddress cellRangeAddressHeader = new CellRangeAddress(0,0,0,12) ;
+//        xssfSheet.addMergedRegion(cellRangeAddressHeader);
+//        //创建单元格样式（表头）
+//        XSSFCellStyle xssfCellStyleHeader = xssfWorkbook.createCellStyle() ;
+//        //设置单元格样式
+//        xssfCellStyleHeader.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
+//        xssfCellStyleHeader.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
+//        //创建字体样式（表头）
+//        XSSFFont xssfFontHeader = xssfWorkbook.createFont() ;
+//        xssfFontHeader.setFontName("宋体");//设置字体名称
+//        xssfFontHeader.setFontHeightInPoints((short) 18);//设置字号
+//        xssfFontHeader.setBold(true);//加粗
+//        xssfCellStyleHeader.setFont(xssfFontHeader);
+//        xssfCellHeader.setCellStyle(xssfCellStyleHeader);
 //
-//        return Msg.success("导出成功") ;
-//        OutputStream os = response.getOutputStream();// 取得输出流
-//        String fileName = "库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx" ;
-//        response.setContentType("application/octet-stream");
-//        response.setHeader("Content-disposition", "attachment;filename="+fileName);//默认Excel名称
-//        response.flushBuffer();
-//        xssfWorkbook.write(os);
+//        //创建行（标题行）
+//        XSSFRow xssfRowTitle = xssfSheet.createRow(1) ;
+//        String[] title = {"库存名称规格","货品类别","主计量单位","货品介绍","进货价","零售价","批发价","供货商","当前库存数量"
+//                ,"最低库存数量","备注","创建时间","上次修改时间"} ;
+//        //设置单元格宽度
+//        xssfSheet.setColumnWidth(0,14*256);
+//        xssfSheet.setColumnWidth(1,10*256);
+//        xssfSheet.setColumnWidth(2,12*256);
+//        xssfSheet.setColumnWidth(3,14*256);
+//        xssfSheet.setColumnWidth(4,8*256);
+//        xssfSheet.setColumnWidth(5,8*256);
+//        xssfSheet.setColumnWidth(6,8*256);
+//        xssfSheet.setColumnWidth(7,16*256);
+//        xssfSheet.setColumnWidth(8,14*256);
+//        xssfSheet.setColumnWidth(9,14*256);
+//        xssfSheet.setColumnWidth(10,10*256);
+//        xssfSheet.setColumnWidth(11,18*256);
+//        xssfSheet.setColumnWidth(12,18*256);
+//        //创建单元格样式（标题）
+//        XSSFCellStyle xssfCellStyleTitle = xssfWorkbook.createCellStyle() ;
+//        //设置单元格样式
+//        xssfCellStyleTitle.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
+//        xssfCellStyleTitle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
+//        //创建字体样式（标题）
+//        XSSFFont xssfFontTitle = xssfWorkbook.createFont() ;
+//        xssfFontTitle.setFontName("宋体");//设置字体名称
+//        xssfFontTitle.setFontHeightInPoints((short) 12);//设置字号
+//        xssfFontTitle.setBold(true);//加粗
+//        xssfCellStyleTitle.setFont(xssfFontTitle);
+//        for (int i = 0 ; i < title.length ; i++) {
+//            //创建列（标题列）
+//            XSSFCell xssfCellTitle = xssfRowTitle.createCell(i) ;
+//            xssfCellTitle.setCellValue(title[i]);
+//            xssfCellTitle.setCellStyle(xssfCellStyleTitle);
+//        }
+//
+//        //创建单元格样式（内容）
+//        XSSFCellStyle xssfCellStyleContent = xssfWorkbook.createCellStyle() ;
+//        //设置单元格样式
+//        xssfCellStyleContent.setAlignment(XSSFCellStyle.ALIGN_CENTER);//水平居中
+//        xssfCellStyleContent.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER);//垂直居中
+//        xssfCellStyleContent.setWrapText(true);//自动换行
+//        //创建字体样式（内容）
+//        XSSFFont xssfFontContent = xssfWorkbook.createFont() ;
+//        xssfFontContent.setFontName("宋体");//设置字体名称
+//        xssfFontContent.setFontHeightInPoints((short) 10);//设置字号
+//
+//        xssfCellStyleContent.setFont(xssfFontContent);
+//        Stock stock;
+//        for (int i = 0 ; i < stockList.size() ; i++ ) {
+//            //创建行（内容行）
+//            XSSFRow xssfRowContent = xssfSheet.createRow(i + 2) ;
+//            stock = stockList.get(i) ;
+//
+//            //库存名称规格单元格
+//            XSSFCell xssfCellContent0 = xssfRowContent.createCell(0) ;
+//            xssfCellContent0.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent0.setCellValue(stock.getStockName());
+//            //货品类别单元格
+//            XSSFCell xssfCellContent1 = xssfRowContent.createCell(1) ;
+//            xssfCellContent1.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent1.setCellValue(stock.getStockType() == null ? "" :stock.getStockType());
+//            //主计量单位单元格
+//            XSSFCell xssfCellContent2 = xssfRowContent.createCell(2) ;
+//            xssfCellContent2.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent2.setCellValue(stock.getUnit() == null ? "" :stock.getUnit());
+//            //货品介绍单元格
+//            XSSFCell xssfCellContent3 = xssfRowContent.createCell(3) ;
+//            xssfCellContent3.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent3.setCellValue(stock.getIntroduction() == null ? "" :stock.getIntroduction());
+//            //进货价单元格
+//            XSSFCell xssfCellContent4 = xssfRowContent.createCell(4) ;
+//            xssfCellContent4.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent4.setCellValue(stock.getPurchasePrice() == null ? 0.0 :stock.getPurchasePrice());
+//            //零售价单元格
+//            XSSFCell xssfCellContent5 = xssfRowContent.createCell(5) ;
+//            xssfCellContent5.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent5.setCellValue(stock.getRetailPrice() == null ? 0.0 :stock.getRetailPrice());
+//            //批发价单元格
+//            XSSFCell xssfCellContent6 = xssfRowContent.createCell(6) ;
+//            xssfCellContent6.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent6.setCellValue(stock.getWholesalePrice() == null ? 0.0 :stock.getWholesalePrice());
+//            //供货商单元格
+//            XSSFCell xssfCellContent7 = xssfRowContent.createCell(7) ;
+//            xssfCellContent7.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent7.setCellValue(stock.getSupplier() == null ? "" :stock.getSupplier());
+//            //当前库存数量单元格
+//            XSSFCell xssfCellContent8 = xssfRowContent.createCell(8) ;
+//            xssfCellContent8.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent8.setCellValue(stock.getStockNow() == null ? 0.0 :stock.getStockNow());
+//            //最低库存数量单元格
+//            XSSFCell xssfCellContent9 = xssfRowContent.createCell(9) ;
+//            xssfCellContent9.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent9.setCellValue(stock.getStockLowest() == null ? 0.0 :stock.getStockLowest());
+//            //备注单元格
+//            XSSFCell xssfCellContent10 = xssfRowContent.createCell(10) ;
+//            xssfCellContent10.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent10.setCellValue(stock.getRemark() == null ? "" :stock.getRemark());
+//            //创建时间单元格
+//            XSSFCell xssfCellContent11 = xssfRowContent.createCell(11) ;
+//            xssfCellContent11.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent11.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getCreatTime() == null ? new Date() :stock.getCreatTime()));
+//            //上次修改时间单元格
+//            XSSFCell xssfCellContent12 = xssfRowContent.createCell(12) ;
+//            xssfCellContent12.setCellStyle(xssfCellStyleContent);
+//            xssfCellContent12.setCellValue(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(stock.getUpdateTime() == null ? new Date() :stock.getUpdateTime()));
+//        }
+//
+//        //文档输出
+////        FileOutputStream out = new FileOutputStream("/库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx");
+////        xssfWorkbook.write(out);
+////        out.close();
+////
+////        return Msg.success("导出成功") ;
+////        OutputStream os = response.getOutputStream();// 取得输出流
+////        String fileName = "库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx" ;
+////        response.setContentType("application/octet-stream");
+////        response.setHeader("Content-disposition", "attachment;filename="+fileName);//默认Excel名称
+////        response.flushBuffer();
+////        xssfWorkbook.write(os);
         return xssfWorkbook ;
     }
 

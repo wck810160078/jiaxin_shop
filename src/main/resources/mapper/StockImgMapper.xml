@@ -90,4 +90,12 @@
       remark = #{remark,jdbcType=VARCHAR}
     where stock_img_id = #{stockImgId,jdbcType=INTEGER}
   </update>
+
+
+  <!--  根据库存id停用库存图片-->
+  <update id="closeImgByStockId" parameterType="Integer" >
+    update stock_img
+    set state = 'close'
+    where stock_id = #{stockId,jdbcType=INTEGER}
+  </update>
 </mapper>

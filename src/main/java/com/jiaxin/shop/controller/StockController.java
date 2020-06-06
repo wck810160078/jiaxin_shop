@@ -5,12 +5,10 @@ import com.jiaxin.shop.service.StockService;
 import com.jiaxin.shop.utils.BaseUtil;
 import com.jiaxin.shop.utils.Msg;
 import com.jiaxin.shop.utils.PageData;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -32,7 +30,7 @@ public class StockController {
      * @return com.jiaxin.shop.utils.Msg
      **/
     @PostMapping("/staff/saveStock")
-    public Msg saveStock(@RequestBody Stock stock) {
+    public Msg saveStock(@RequestBody Stock stock) throws Exception {
         if(BaseUtil.isBlank(stock.getStockName())) {
             return Msg.fail("缺少关键参数");
         }
@@ -89,49 +87,14 @@ public class StockController {
      **/
     @GetMapping("/staff/exportStocks")
     public Object exportStocks(@RequestParam String label,HttpServletRequest request, HttpServletResponse response) throws IOException {
-        XSSFWorkbook xssfWorkbook = stockService.exportStocks(label,request,response);
+        //表头
+        String title = "库存信息_全部类别" ;
+        //标题
+        String[] headers = {"库存名称规格","货品类别","主计量单位","货品介绍","进货价","零售价","批发价","供货商","当前库存数量"
+                ,"最低库存数量","备注","创建时间","上次修改时间"} ;
         String fileName = "库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx" ;
         fileName = URLEncoder.encode(fileName, "UTF-8");
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try {
-            xssfWorkbook.write(os);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        byte[] content = os.toByteArray();
-        InputStream is = new ByteArrayInputStream(content);
-        // 设置response参数，可以打开下载页面
-        response.reset();
-        response.setCharacterEncoding("UTF-8");
-        response.setContentType("application/x-download");
-//        response.setContentType("application/vnd.ms-excel;charset=utf-8");
-        response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-        ServletOutputStream out = response.getOutputStream();
-
-        BufferedInputStream bis = null;
-        BufferedOutputStream bos = null;
-
-        try {
-
-            bis = new BufferedInputStream(is);
-            bos = new BufferedOutputStream(out);
-
-            byte[] buff = new byte[2048];
-            int bytesRead;
-
-            // Simple read/write loop.
-            while (-1 != (bytesRead = bis.read(buff, 0, buff.length))) {
-                bos.write(buff, 0, bytesRead);
-            }
-
-        } catch (final IOException e) {
-            throw e;
-        } finally {
-            if (bis != null)
-                bis.close();
-            if (bos != null)
-                bos.close();
-        }
+        stockService.exportStocks(label,request,response,title,headers,fileName);
         return null;
     }
 }

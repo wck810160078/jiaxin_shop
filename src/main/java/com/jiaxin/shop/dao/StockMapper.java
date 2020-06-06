@@ -49,4 +49,6 @@ public interface StockMapper {
     Stock getStockByName(String stockName);
 
     List<Stock> getExportStockListByLabel(String label);
+
+    int insertStockSelective(Stock record);
 }

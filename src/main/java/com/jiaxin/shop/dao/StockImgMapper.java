@@ -38,4 +38,6 @@ public interface StockImgMapper {
      * @mbggenerated 2020-05-25
      */
     int updateByPrimaryKey(StockImg record);
+
+    int closeImgByStockId(Integer stockId);
 }

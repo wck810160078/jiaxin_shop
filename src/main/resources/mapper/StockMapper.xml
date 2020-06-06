@@ -234,7 +234,117 @@
   </update>
 
 
+  <!--  插入库存信息 返回主键-->
 
+  <insert id="insertStockSelective" useGeneratedKeys="true" keyProperty="stockId" parameterType="com.jiaxin.shop.pojo.Stock" >
+    insert into stock
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="stockId != null" >
+        stock_id,
+      </if>
+      <if test="stockName != null" >
+        stock_name,
+      </if>
+      <if test="stockType != null" >
+        stock_type,
+      </if>
+      <if test="unit != null" >
+        unit,
+      </if>
+      <if test="supplier != null" >
+        supplier,
+      </if>
+      <if test="stockInitial != null" >
+        stock_initial,
+      </if>
+      <if test="stockNow != null" >
+        stock_now,
+      </if>
+      <if test="stockLowest != null" >
+        stock_lowest,
+      </if>
+      <if test="retailPrice != null" >
+        retail_price,
+      </if>
+      <if test="purchasePrice != null" >
+        purchase_price,
+      </if>
+      <if test="wholesalePrice != null" >
+        wholesale_price,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="introduction != null" >
+        introduction,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="stockId != null" >
+        #{stockId,jdbcType=INTEGER},
+      </if>
+      <if test="stockName != null" >
+        #{stockName,jdbcType=VARCHAR},
+      </if>
+      <if test="stockType != null" >
+        #{stockType,jdbcType=VARCHAR},
+      </if>
+      <if test="unit != null" >
+        #{unit,jdbcType=VARCHAR},
+      </if>
+      <if test="supplier != null" >
+        #{supplier,jdbcType=VARCHAR},
+      </if>
+      <if test="stockInitial != null" >
+        #{stockInitial,jdbcType=INTEGER},
+      </if>
+      <if test="stockNow != null" >
+        #{stockNow,jdbcType=INTEGER},
+      </if>
+      <if test="stockLowest != null" >
+        #{stockLowest,jdbcType=INTEGER},
+      </if>
+      <if test="retailPrice != null" >
+        #{retailPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="purchasePrice != null" >
+        #{purchasePrice,jdbcType=DOUBLE},
+      </if>
+      <if test="wholesalePrice != null" >
+        #{wholesalePrice,jdbcType=DOUBLE},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=VARCHAR},
+      </if>
+      <if test="introduction != null" >
+        #{introduction,jdbcType=VARCHAR},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
 
   <!--  根据条件分页查询库存信息-->
   <select id="getStockListByLabel" resultType="com.jiaxin.shop.pojo.Stock" parameterType="com.jiaxin.shop.utils.PageData" >

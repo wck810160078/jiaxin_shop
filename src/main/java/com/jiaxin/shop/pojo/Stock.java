@@ -1,6 +1,7 @@
 package com.jiaxin.shop.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Stock {
     /**
@@ -91,12 +92,22 @@ public class Stock {
     //以下为自定义属性
     private String stockSearchContent ;
 
+    private List<StockImg> stockImgList ;
+
     public String getStockSearchContent() {
         return stockSearchContent;
     }
 
     public void setStockSearchContent(String stockSearchContent) {
         this.stockSearchContent = stockSearchContent;
+    }
+
+    public List<StockImg> getStockImgList() {
+        return stockImgList;
+    }
+
+    public void setStockImgList(List<StockImg> stockImgList) {
+        this.stockImgList = stockImgList;
     }
 
     /**
