@@ -212,7 +212,20 @@
   </update>
 
   <!--根据用户名查询用户-->
-  <select id="selectByName" parameterType="String" resultType="com.jiaxin.shop.pojo.SysUser">
-    select * from sys_user where username = #{username};
+  <resultMap id="selectByNameMap" type="com.jiaxin.shop.pojo.SysUser" extends="BaseResultMap">
+    <collection property="sysRoleList" ofType="com.jiaxin.shop.pojo.SysRole">
+      <id column="role_id" property="id" jdbcType="INTEGER" />
+      <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+      <result column="role_description" property="roleDescription" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <select id="selectByName" parameterType="String" resultMap="selectByNameMap">
+    SELECT
+        su.*,sr.id as role_id,role_name,role_description
+    FROM
+        sys_user su
+    LEFT JOIN sys_user_role_relation sur ON su.id = sur.user_id
+    LEFT JOIN sys_role sr ON sr.id = sur.role_id
+    where username = #{username};
   </select>
 </mapper>

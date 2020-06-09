@@ -1,6 +1,7 @@
 package com.jiaxin.shop.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class SysUser {
     /**
@@ -77,6 +78,17 @@ public class SysUser {
      * 登录ip
      */
     private String loginIp;
+
+    //自定义字段
+    private List<SysRole> sysRoleList;
+
+    public List<SysRole> getSysRoleList() {
+        return sysRoleList;
+    }
+
+    public void setSysRoleList(List<SysRole> sysRoleList) {
+        this.sysRoleList = sysRoleList;
+    }
 
     /**
      * 

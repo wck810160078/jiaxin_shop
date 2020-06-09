@@ -68,4 +68,23 @@
       description = #{description,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+
+  <!-- 获取所有权限路径 -->
+  <resultMap id="getAllPathMap" type="com.jiaxin.shop.pojo.SysRequestPath" extends="BaseResultMap">
+    <collection property="sysRoleList" ofType="com.jiaxin.shop.pojo.SysRole">
+      <id column="role_id" property="id" jdbcType="INTEGER" />
+      <result column="role_name" property="roleName" jdbcType="VARCHAR" />
+      <result column="role_description" property="roleDescription" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <select id="getAllPath" resultMap="getAllPathMap">
+    SELECT
+        srp.*,sr.id as role_id,role_name,role_description
+    FROM
+        sys_request_path srp
+    LEFT JOIN sys_request_path_permission_relation srppr ON srp.id = srppr.url_id
+    LEFT JOIN sys_role_permission_relation srpr ON srpr.permission_id = srppr.permission_id
+    LEFT JOIN sys_role sr ON sr.id = srpr.role_id
+    GROUP BY sr.id
+  </select>
 </mapper>

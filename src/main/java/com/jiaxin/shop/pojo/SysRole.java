@@ -16,6 +16,13 @@ public class SysRole {
      */
     private String roleDescription;
 
+    public SysRole() {
+    }
+
+    public SysRole(String roleName) {
+        this.roleName = roleName;
+    }
+
     /**
      * 主键id
      * @return id 主键id

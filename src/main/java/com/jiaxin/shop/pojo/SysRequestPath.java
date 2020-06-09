@@ -1,5 +1,7 @@
 package com.jiaxin.shop.pojo;
 
+import java.util.List;
+
 public class SysRequestPath {
     /**
      * 主键id
@@ -15,6 +17,19 @@ public class SysRequestPath {
      * 路径描述
      */
     private String description;
+
+    /**
+     * 关联角色
+     */
+    private List<SysRole> sysRoleList;
+
+    public List<SysRole> getSysRoleList() {
+        return sysRoleList;
+    }
+
+    public void setSysRoleList(List<SysRole> sysRoleList) {
+        this.sysRoleList = sysRoleList;
+    }
 
     /**
      * 主键id
@@ -63,4 +78,6 @@ public class SysRequestPath {
     public void setDescription(String description) {
         this.description = description == null ? null : description.trim();
     }
+
+
 }

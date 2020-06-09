@@ -2,6 +2,8 @@ package com.jiaxin.shop.dao;
 
 import com.jiaxin.shop.pojo.SysRequestPath;
 
+import java.util.List;
+
 public interface SysRequestPathMapper {
     /**
      *
@@ -38,4 +40,10 @@ public interface SysRequestPathMapper {
      * @mbggenerated 2020-05-17
      */
     int updateByPrimaryKey(SysRequestPath record);
+
+    /**
+     * 获取权限路径
+     * @return
+     */
+    List<SysRequestPath> getAllPath();
 }

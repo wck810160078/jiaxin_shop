@@ -4,6 +4,8 @@ spring:
   jackson:
     date-format: yyyy-MM-dd hh:mm:ss
     time-zone: GMT+8
+    # 不返回空值给前端
+    default-property-inclusion: non_null
   application:
     name: jiaxin_shop
   datasource:
@@ -40,6 +42,19 @@ spring:
     # 合并多个DruidDataSource的监控数据
     #useGlobalDataSourceStat: true
 
+    redis:
+      host: 47.108.94.220
+      port: 6379
+      password: wck1995
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1
+          max-idle: 8
+          min-idle: 0
+      timeout: 100000  #redis 连接超时时间ms
+      database: 0
+
 server:
   port: 8081
 
@@ -56,21 +71,7 @@ mybatis:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+
+
 #上传图片路径-本地
 upload-file-path: E:\jiaxin\images
-
-#上传图片路径-远程服务器
-#upload-file-path: \home\jiaxin\images
-
-#redis:
-#  port: 6379
-#  host: r-wz9esx9x23tl8nvpblpd.redis.rds.aliyuncs.com
-#  lettuce:
-#    pool:
-#      max-active: 8
-#      max-wait: -1
-#      max-idle: 8
-#      min-idle: 0
-#  timeout: 100000  #redis 连接超时时间ms
-#  database: 0
-#  password: Hejiazhou321
