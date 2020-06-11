@@ -1,5 +1,6 @@
 package com.jiaxin.shop.controller;
 
+import com.jiaxin.shop.utils.Msg;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,11 @@ public class TestController {
         String a = redisTemplate.opsForValue().get("a").toString();
         System.out.println(a);
         return "正在开发中，敬请期待";
+    }
+
+    @GetMapping("/login/warning")
+    public Msg loginWarning(){
+        return Msg.fail("未登录").setCode(400);
     }
 
 
