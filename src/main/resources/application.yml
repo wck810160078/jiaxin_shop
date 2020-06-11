@@ -1,4 +1,16 @@
 spring:
+  redis:
+    host: 47.108.94.220
+    port: 6379
+    password: wck1995
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+    timeout: 100000  #redis 连接超时时间ms
+    database: 0
   profiles:
     active: dev
   jackson:
@@ -42,18 +54,6 @@ spring:
     # 合并多个DruidDataSource的监控数据
     #useGlobalDataSourceStat: true
 
-    redis:
-      host: 47.108.94.220
-      port: 6379
-      password: wck1995
-      lettuce:
-        pool:
-          max-active: 8
-          max-wait: -1
-          max-idle: 8
-          min-idle: 0
-      timeout: 100000  #redis 连接超时时间ms
-      database: 0
 
 server:
   port: 8081
