@@ -118,7 +118,7 @@ public class JWTLoginFilter extends UsernamePasswordAuthenticationFilter {
         }else{
             String token = Jwts.builder()
                     .setSubject(username)
-                    .signWith(SignatureAlgorithm.HS512, "yunwuyou".getBytes())
+                    .signWith(SignatureAlgorithm.HS512, "jiaxin".getBytes())
                     .compact();
 
             returnResult(res, username,token);
