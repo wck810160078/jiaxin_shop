@@ -3,16 +3,12 @@ package com.jiaxin.shop.security;
 
 import com.jiaxin.shop.dao.SysUserMapper;
 import com.jiaxin.shop.pojo.JxUser;
-import com.jiaxin.shop.pojo.SysRole;
 import com.jiaxin.shop.pojo.SysUser;
-import com.jiaxin.shop.pojo.common.PublicConstants;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author hejiazhou
@@ -39,7 +35,7 @@ public class UserLoginServiceImpl implements UserDetailsService {
 
         if(sysUser!=null){
             return new JxUser(
-                    sysUser.getPhoneNumber(),
+                    sysUser.getUsername(),
                     sysUser.getPassword(),
                     sysUser.getEnabled(),
                     sysUser.getSysRoleList()

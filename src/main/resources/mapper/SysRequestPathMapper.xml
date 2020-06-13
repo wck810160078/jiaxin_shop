@@ -85,6 +85,5 @@
     LEFT JOIN sys_request_path_permission_relation srppr ON srp.id = srppr.url_id
     LEFT JOIN sys_role_permission_relation srpr ON srpr.permission_id = srppr.permission_id
     LEFT JOIN sys_role sr ON sr.id = srpr.role_id
-    GROUP BY sr.id
   </select>
 </mapper>
