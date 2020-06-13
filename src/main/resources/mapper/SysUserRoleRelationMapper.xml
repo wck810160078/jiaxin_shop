@@ -72,4 +72,10 @@
   <select id="getRoleIdByUserId" parameterType="Integer" resultType="Integer">
     select role_id from sys_user_role_relation where  user_id = #{userId,jdbcType=INTEGER}
   </select>
+
+
+  <!--  根据用户id删除用户角色信息-->
+  <delete id="deleteByUserId" parameterType="Integer" >
+    delete from sys_user_role_relation where user_id = #{userId,jdbcType=INTEGER}
+  </delete>
 </mapper>

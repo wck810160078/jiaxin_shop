@@ -1,6 +1,7 @@
 package com.jiaxin.shop.dao;
 
 import com.jiaxin.shop.pojo.Stock;
+import com.jiaxin.shop.pojo.StockRecord;
 import com.jiaxin.shop.utils.PageData;
 
 import java.util.List;
@@ -48,7 +49,8 @@ public interface StockMapper {
 
     Stock getStockByName(String stockName);
 
-    List<Stock> getExportStockListByLabel(String label);
+    List<Stock> getExportStockListByLabel(Integer label);
 
     int insertStockSelective(Stock record);
+
 }

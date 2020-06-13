@@ -1,16 +1,18 @@
 package com.jiaxin.shop.controller;
 
-import com.jiaxin.shop.pojo.StockImg;
 import com.jiaxin.shop.service.StockImgService;
 import com.jiaxin.shop.utils.Msg;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.*;
 
 @RestController
@@ -49,4 +51,29 @@ public class StockImgController {
 //        stockImg.setStockImgSrc(stockImgSrc);
 //        return stockImgService.saveStockImg(stockImg) ;
 //    }
+
+    /**
+     * @Author chenting
+     * @Description  根据图片路径获取图片 
+     * @Date 19:26 2020/6/11
+     * @Param [imgPath, response]
+     * @return void
+     **/
+    @GetMapping("/getImg")
+    public void getImg(@RequestParam String imgPath , HttpServletResponse response) throws IOException {
+        System.out.println("<<<<<<<<<<<<<<<<<<---------------------加载了图片："+imgPath+"------------------------>>>>>>>>>>>>");
+        //加载图片
+        BufferedImage bufferedImage = ImageIO.read(new FileInputStream(imgPath)) ;
+        //设置response
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("image/jpeg");
+
+        //将图片传输到Servlet输出流中
+        ServletOutputStream outputStream = response.getOutputStream() ;
+        String filePath = imgPath.substring(imgPath.lastIndexOf(".")+1) ;
+        ImageIO.write(bufferedImage,filePath,outputStream) ;
+        outputStream.close();
+    }
 }

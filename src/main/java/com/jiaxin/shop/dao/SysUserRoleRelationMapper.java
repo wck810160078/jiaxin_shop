@@ -40,4 +40,6 @@ public interface SysUserRoleRelationMapper {
     int updateByPrimaryKey(SysUserRoleRelation record);
 
     Integer getRoleIdByUserId(Integer id);
+
+    int deleteByUserId(Integer id);
 }

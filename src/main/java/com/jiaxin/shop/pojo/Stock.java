@@ -1,5 +1,6 @@
 package com.jiaxin.shop.pojo;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -32,37 +33,37 @@ public class Stock {
     /**
      * 初始库存数量
      */
-    private Integer stockInitial;
+    private BigDecimal stockInitial;
 
     /**
      * 当前库存数量
      */
-    private Integer stockNow;
+    private BigDecimal stockNow;
 
     /**
      * 最低库存数量
      */
-    private Integer stockLowest;
+    private BigDecimal stockLowest;
 
     /**
      * 零售价
      */
-    private Double retailPrice;
+    private BigDecimal retailPrice;
 
     /**
      * 进货价
      */
-    private Double purchasePrice;
+    private BigDecimal purchasePrice;
 
     /**
      * 批发价
      */
-    private Double wholesalePrice;
+    private BigDecimal wholesalePrice;
 
     /**
-     * 库存标签（产品、原料、包装材料）
+     * 库存标签（1:产品、2:原料、3:包装材料）
      */
-    private String label;
+    private Integer label;
 
     /**
      * 介绍
@@ -90,9 +91,54 @@ public class Stock {
     private String remark;
 
     //以下为自定义属性
+    /**
+     * 库存查询内容
+     */
     private String stockSearchContent ;
 
+    /**
+     * 库存图片集合
+     */
     private List<StockImg> stockImgList ;
+
+
+    /**
+     * @Author chenting
+     * @Description  构造函数
+     * @Date 20:58 2020/6/9
+     * @Param []
+     * @return 
+     **/
+    public Stock() {
+    }
+
+    /**
+     * @Author chenting
+     * @Description  构造函数
+     * @Date 20:59 2020/6/9
+     * @Param [stockName, stockType, unit, supplier, stockInitial, stockNow, stockLowest, retailPrice, purchasePrice, wholesalePrice, label, introduction, state, remark]
+     * @return
+     **/
+    public Stock(String stockName, String stockType, String unit, String supplier, BigDecimal stockInitial, BigDecimal stockNow, BigDecimal stockLowest, BigDecimal retailPrice, BigDecimal purchasePrice, BigDecimal wholesalePrice, Integer label, String introduction,String state, String remark) {
+        this.stockName = stockName;
+        this.stockType = stockType;
+        this.unit = unit;
+        this.supplier = supplier;
+        this.stockInitial = stockInitial;
+        this.stockNow = stockNow;
+        this.stockLowest = stockLowest;
+        this.retailPrice = retailPrice;
+        this.purchasePrice = purchasePrice;
+        this.wholesalePrice = wholesalePrice;
+        this.label = label;
+        this.introduction = introduction;
+        this.state = state;
+        this.remark = remark;
+    }
+
+    /**
+     *   get/set方法
+     **/
 
     public String getStockSearchContent() {
         return stockSearchContent;
@@ -194,7 +240,7 @@ public class Stock {
      * 初始库存数量
      * @return stock_initial 初始库存数量
      */
-    public Integer getStockInitial() {
+    public BigDecimal getStockInitial() {
         return stockInitial;
     }
 
@@ -202,7 +248,7 @@ public class Stock {
      * 初始库存数量
      * @param stockInitial 初始库存数量
      */
-    public void setStockInitial(Integer stockInitial) {
+    public void setStockInitial(BigDecimal stockInitial) {
         this.stockInitial = stockInitial;
     }
 
@@ -210,7 +256,7 @@ public class Stock {
      * 当前库存数量
      * @return stock_now 当前库存数量
      */
-    public Integer getStockNow() {
+    public BigDecimal getStockNow() {
         return stockNow;
     }
 
@@ -218,7 +264,7 @@ public class Stock {
      * 当前库存数量
      * @param stockNow 当前库存数量
      */
-    public void setStockNow(Integer stockNow) {
+    public void setStockNow(BigDecimal stockNow) {
         this.stockNow = stockNow;
     }
 
@@ -226,7 +272,7 @@ public class Stock {
      * 最低库存数量
      * @return stock_lowest 最低库存数量
      */
-    public Integer getStockLowest() {
+    public BigDecimal getStockLowest() {
         return stockLowest;
     }
 
@@ -234,7 +280,7 @@ public class Stock {
      * 最低库存数量
      * @param stockLowest 最低库存数量
      */
-    public void setStockLowest(Integer stockLowest) {
+    public void setStockLowest(BigDecimal stockLowest) {
         this.stockLowest = stockLowest;
     }
 
@@ -242,7 +288,7 @@ public class Stock {
      * 零售价
      * @return retail_price 零售价
      */
-    public Double getRetailPrice() {
+    public BigDecimal getRetailPrice() {
         return retailPrice;
     }
 
@@ -250,7 +296,7 @@ public class Stock {
      * 零售价
      * @param retailPrice 零售价
      */
-    public void setRetailPrice(Double retailPrice) {
+    public void setRetailPrice(BigDecimal retailPrice) {
         this.retailPrice = retailPrice;
     }
 
@@ -258,7 +304,7 @@ public class Stock {
      * 进货价
      * @return purchase_price 进货价
      */
-    public Double getPurchasePrice() {
+    public BigDecimal getPurchasePrice() {
         return purchasePrice;
     }
 
@@ -266,7 +312,7 @@ public class Stock {
      * 进货价
      * @param purchasePrice 进货价
      */
-    public void setPurchasePrice(Double purchasePrice) {
+    public void setPurchasePrice(BigDecimal purchasePrice) {
         this.purchasePrice = purchasePrice;
     }
 
@@ -274,7 +320,7 @@ public class Stock {
      * 批发价
      * @return wholesale_price 批发价
      */
-    public Double getWholesalePrice() {
+    public BigDecimal getWholesalePrice() {
         return wholesalePrice;
     }
 
@@ -282,7 +328,7 @@ public class Stock {
      * 批发价
      * @param wholesalePrice 批发价
      */
-    public void setWholesalePrice(Double wholesalePrice) {
+    public void setWholesalePrice(BigDecimal wholesalePrice) {
         this.wholesalePrice = wholesalePrice;
     }
 
@@ -290,7 +336,7 @@ public class Stock {
      * 库存标签（产品、原料、包装材料）
      * @return label 库存标签（产品、原料、包装材料）
      */
-    public String getLabel() {
+    public Integer getLabel() {
         return label;
     }
 
@@ -298,8 +344,8 @@ public class Stock {
      * 库存标签（产品、原料、包装材料）
      * @param label 库存标签（产品、原料、包装材料）
      */
-    public void setLabel(String label) {
-        this.label = label == null ? null : label.trim();
+    public void setLabel(Integer label) {
+        this.label = label;
     }
 
     /**
@@ -380,45 +426,5 @@ public class Stock {
      */
     public void setRemark(String remark) {
         this.remark = remark == null ? null : remark.trim();
-    }
-
-    public Stock(String stockName, String stockType, String unit, String supplier, Integer stockInitial, Integer stockNow, Integer stockLowest, Double retailPrice, Double purchasePrice, Double wholesalePrice, String label, String introduction,String state, String remark) {
-        this.stockName = stockName;
-        this.stockType = stockType;
-        this.unit = unit;
-        this.supplier = supplier;
-        this.stockInitial = stockInitial;
-        this.stockNow = stockNow;
-        this.stockLowest = stockLowest;
-        this.retailPrice = retailPrice;
-        this.purchasePrice = purchasePrice;
-        this.wholesalePrice = wholesalePrice;
-        this.label = label;
-        this.introduction = introduction;
-        this.state = state;
-        this.remark = remark;
-    }
-
-//    public Stock(Integer stockId, String stockName, String stockType, String unit, String supplier, Integer stockInitial, Integer stockNow, Integer stockLowest, Double retailPrice, Double purchasePrice, Double wholesalePrice, String label, String introduction, Date creatTime, Date updateTime, String state, String remark) {
-//        this.stockId = stockId;
-//        this.stockName = stockName;
-//        this.stockType = stockType;
-//        this.unit = unit;
-//        this.supplier = supplier;
-//        this.stockInitial = stockInitial;
-//        this.stockNow = stockNow;
-//        this.stockLowest = stockLowest;
-//        this.retailPrice = retailPrice;
-//        this.purchasePrice = purchasePrice;
-//        this.wholesalePrice = wholesalePrice;
-//        this.label = label;
-//        this.introduction = introduction;
-//        this.creatTime = creatTime;
-//        this.updateTime = updateTime;
-//        this.state = state;
-//        this.remark = remark;
-//    }
-
-    public Stock() {
     }
 }

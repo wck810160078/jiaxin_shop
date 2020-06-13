@@ -9,12 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 @RestController
 public class StockController {
@@ -46,9 +42,9 @@ public class StockController {
      **/
     @PostMapping("/staff/getStockListByLabel")
     public Msg getStockListByLabel(@RequestBody PageData<Stock> stockPageData) {
-        if(BaseUtil.isBlank(stockPageData.getParamObj().getLabel())) {
-            return Msg.fail("缺少关键参数") ;
-        }
+//        if(BaseUtil.isBlank(stockPageData.getParamObj().getLabel())) {
+//            return Msg.fail("缺少关键参数") ;
+//        }
         return stockService.getStockListByLabel(stockPageData) ;
     }
 
@@ -75,7 +71,7 @@ public class StockController {
      * @return com.jiaxin.shop.utils.Msg
      **/
     @PostMapping("/staff/importStocks")
-    public Msg importStocks(@RequestParam MultipartFile excelFile,@RequestParam String label) throws IOException {
+    public Msg importStocks(@RequestParam MultipartFile excelFile,@RequestParam Integer label) throws IOException {
         return stockService.importStocks(excelFile,label) ;
     }
 
@@ -86,15 +82,24 @@ public class StockController {
      * @Param [label]
      **/
     @GetMapping("/staff/exportStocks")
-    public Object exportStocks(@RequestParam String label,HttpServletRequest request, HttpServletResponse response) throws IOException {
-        //表头
-        String title = "库存信息_全部类别" ;
-        //标题
-        String[] headers = {"库存名称规格","货品类别","主计量单位","货品介绍","进货价","零售价","批发价","供货商","当前库存数量"
-                ,"最低库存数量","备注","创建时间","上次修改时间"} ;
-        String fileName = "库存信息_全部类别" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()).toString() +".xlsx" ;
-        fileName = URLEncoder.encode(fileName, "UTF-8");
-        stockService.exportStocks(label,request,response,title,headers,fileName);
+    public Object exportStocks(@RequestParam Integer label,HttpServletResponse response) throws IOException {
+        stockService.exportStocks(label,response);
         return null;
     }
+    
+    /**
+     * @Author chenting
+     * @Description  根据库存id查询库存信息
+     * @Date 23:40 2020/6/9
+     * @Param [stockId]
+     * @return com.jiaxin.shop.utils.Msg
+     **/
+    @GetMapping("/staff/selectStockByPrimaryKey")
+    public Msg selectStockByPrimaryKey(@RequestParam Integer stockId) {
+        if(BaseUtil.isBlank(stockId)) {
+            return Msg.fail("缺少关键参数-库存信息") ;
+        }
+        return stockService.selectStockByPrimaryKey(stockId) ;
+    }
+
 }

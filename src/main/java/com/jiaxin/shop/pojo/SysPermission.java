@@ -17,6 +17,11 @@ public class SysPermission {
     private String permissionName;
 
     /**
+     * 上一级id
+     */
+    private Integer parentId;
+
+    /**
      * 主键id
      * @return id 主键id
      */
@@ -62,5 +67,21 @@ public class SysPermission {
      */
     public void setPermissionName(String permissionName) {
         this.permissionName = permissionName == null ? null : permissionName.trim();
+    }
+
+    /**
+     * 上一级id
+     * @return parent_id 上一级id
+     */
+    public Integer getParentId() {
+        return parentId;
+    }
+
+    /**
+     * 上一级id
+     * @param parentId 上一级id
+     */
+    public void setParentId(Integer parentId) {
+        this.parentId = parentId;
     }
 }

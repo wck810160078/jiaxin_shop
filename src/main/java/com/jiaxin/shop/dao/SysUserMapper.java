@@ -40,4 +40,5 @@ public interface SysUserMapper {
     int updateByPrimaryKey(SysUser record);
 
     SysUser selectByName(String username);
+
 }

@@ -4,13 +4,18 @@
   <resultMap id="BaseResultMap" type="com.jiaxin.shop.pojo.StockRecord" >
     <id column="stock_record_id" property="stockRecordId" jdbcType="INTEGER" />
     <result column="stock_id" property="stockId" jdbcType="INTEGER" />
-    <result column="record_time" property="recordTime" jdbcType="TIMESTAMP" />
-    <result column="stock_num_old" property="stockNumOld" jdbcType="DECIMAL" />
-    <result column="stock_num_new" property="stockNumNew" jdbcType="DECIMAL" />
-    <result column="record_change" property="recordChange" jdbcType="DECIMAL" />
+    <result column="that_day" property="thatDay" jdbcType="TIMESTAMP" />
+    <result column="old_number" property="oldNumber" jdbcType="DECIMAL" />
+    <result column="number" property="number" jdbcType="DECIMAL" />
+    <result column="new_number" property="newNumber" jdbcType="DECIMAL" />
+    <result column="label" property="label" jdbcType="INTEGER" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="staff_id" property="staffId" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    stock_record_id, stock_id, record_time, stock_num_old, stock_num_new, record_change
+    stock_record_id, stock_id, that_day, old_number, number, new_number, label, creat_time, 
+    update_time, staff_id
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -23,12 +28,14 @@
     where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jiaxin.shop.pojo.StockRecord" >
-    insert into stock_record (stock_record_id, stock_id, record_time, 
-      stock_num_old, stock_num_new, record_change
-      )
-    values (#{stockRecordId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{recordTime,jdbcType=TIMESTAMP}, 
-      #{stockNumOld,jdbcType=DECIMAL}, #{stockNumNew,jdbcType=DECIMAL}, #{recordChange,jdbcType=DECIMAL}
-      )
+    insert into stock_record (stock_record_id, stock_id, that_day, 
+      old_number, number, new_number, 
+      label, creat_time, update_time, 
+      staff_id)
+    values (#{stockRecordId,jdbcType=INTEGER}, #{stockId,jdbcType=INTEGER}, #{thatDay,jdbcType=TIMESTAMP}, 
+      #{oldNumber,jdbcType=DECIMAL}, #{number,jdbcType=DECIMAL}, #{newNumber,jdbcType=DECIMAL},
+      #{label,jdbcType=INTEGER}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{staffId,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.jiaxin.shop.pojo.StockRecord" >
     insert into stock_record
@@ -39,17 +46,29 @@
       <if test="stockId != null" >
         stock_id,
       </if>
-      <if test="recordTime != null" >
-        record_time,
+      <if test="thatDay != null" >
+        that_day,
       </if>
-      <if test="stockNumOld != null" >
-        stock_num_old,
+      <if test="oldNumber != null" >
+        old_number,
       </if>
-      <if test="stockNumNew != null" >
-        stock_num_new,
+      <if test="number != null" >
+        number,
       </if>
-      <if test="recordChange != null" >
-        record_change,
+      <if test="newNumber != null" >
+        new_number,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="staffId != null" >
+        staff_id,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -59,17 +78,29 @@
       <if test="stockId != null" >
         #{stockId,jdbcType=INTEGER},
       </if>
-      <if test="recordTime != null" >
-        #{recordTime,jdbcType=TIMESTAMP},
+      <if test="thatDay != null" >
+        #{thatDay,jdbcType=TIMESTAMP},
       </if>
-      <if test="stockNumOld != null" >
-        #{stockNumOld,jdbcType=DECIMAL},
+      <if test="oldNumber != null" >
+        #{oldNumber,jdbcType=DECIMAL},
       </if>
-      <if test="stockNumNew != null" >
-        #{stockNumNew,jdbcType=DECIMAL},
+      <if test="number != null" >
+        #{number,jdbcType=DECIMAL},
       </if>
-      <if test="recordChange != null" >
-        #{recordChange,jdbcType=DECIMAL},
+      <if test="newNumber != null" >
+        #{newNumber,jdbcType=DECIMAL},
+      </if>
+      <if test="label != null" >
+        #{label,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffId != null" >
+        #{staffId,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -79,17 +110,29 @@
       <if test="stockId != null" >
         stock_id = #{stockId,jdbcType=INTEGER},
       </if>
-      <if test="recordTime != null" >
-        record_time = #{recordTime,jdbcType=TIMESTAMP},
+      <if test="thatDay != null" >
+        that_day = #{thatDay,jdbcType=TIMESTAMP},
       </if>
-      <if test="stockNumOld != null" >
-        stock_num_old = #{stockNumOld,jdbcType=DECIMAL},
+      <if test="oldNumber != null" >
+        old_number = #{oldNumber,jdbcType=DECIMAL},
       </if>
-      <if test="stockNumNew != null" >
-        stock_num_new = #{stockNumNew,jdbcType=DECIMAL},
+      <if test="number != null" >
+        number = #{number,jdbcType=DECIMAL},
       </if>
-      <if test="recordChange != null" >
-        record_change = #{recordChange,jdbcType=DECIMAL},
+      <if test="newNumber != null" >
+        new_number = #{newNumber,jdbcType=DECIMAL},
+      </if>
+      <if test="label != null" >
+        label = #{label,jdbcType=INTEGER},
+      </if>
+      <if test="creatTime != null" >
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="staffId != null" >
+        staff_id = #{staffId,jdbcType=INTEGER},
       </if>
     </set>
     where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
@@ -97,10 +140,54 @@
   <update id="updateByPrimaryKey" parameterType="com.jiaxin.shop.pojo.StockRecord" >
     update stock_record
     set stock_id = #{stockId,jdbcType=INTEGER},
-      record_time = #{recordTime,jdbcType=TIMESTAMP},
-      stock_num_old = #{stockNumOld,jdbcType=DECIMAL},
-      stock_num_new = #{stockNumNew,jdbcType=DECIMAL},
-      record_change = #{recordChange,jdbcType=DECIMAL}
+      that_day = #{thatDay,jdbcType=TIMESTAMP},
+      old_number = #{oldNumber,jdbcType=DECIMAL},
+      number = #{number,jdbcType=DECIMAL},
+      new_number = #{newNumber,jdbcType=DECIMAL},
+      label = #{label,jdbcType=INTEGER},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      staff_id = #{staffId,jdbcType=INTEGER}
     where stock_record_id = #{stockRecordId,jdbcType=INTEGER}
   </update>
+
+
+  <!--  根据起始日期和终止日期查询库存记录信息-->
+  <select id="getStockRecordList" parameterType="com.jiaxin.shop.utils.PageData" resultType="com.jiaxin.shop.pojo.StockRecord">
+     select
+        b.stock_name as stockName,a.*,c.`name` as staffName
+     from stock_record a
+     left join stock b
+     on a.stock_id = b.stock_id
+     left join sys_user c
+     on a.staff_id = c.id
+     <where>
+       <if test="paramObj.beginDate != null">
+         that_day BETWEEN #{paramObj.beginDate,jdbcType=TIMESTAMP} and #{paramObj.endDate,jdbcType=TIMESTAMP}
+       </if>
+       <if test="paramObj.stockId != null" >
+         and a.stock_id = #{paramObj.stockId,jdbcType=INTEGER}
+       </if>
+     </where>
+  </select>
+
+
+  <!--  根据起始日期和终止日期查询库存记录信息总条数-->
+  <select id="getStockRecordCount" parameterType="com.jiaxin.shop.pojo.StockRecord" resultType="Long" >
+      select
+        count(a.stock_record_id)
+      from stock_record a
+      left join stock b
+      on a.stock_id = b.stock_id
+      left join sys_user c
+      on a.staff_id = c.id
+      <where>
+        <if test="beginDate != null">
+          that_day BETWEEN #{beginDate,jdbcType=TIMESTAMP} and #{endDate,jdbcType=TIMESTAMP}
+        </if>
+        <if test="stockId != null" >
+          and a.stock_id = #{stockId,jdbcType=INTEGER}
+        </if>
+      </where>
+    </select>
 </mapper>

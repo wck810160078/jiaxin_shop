@@ -1,12 +1,16 @@
 package com.jiaxin.shop.utils;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.RegionUtil;
 import org.apache.poi.xssf.usermodel.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.math.BigDecimal;
 
 public class ExcelUtil {
 
@@ -164,7 +168,7 @@ public class ExcelUtil {
         xssfFontContent.setFontHeightInPoints((short) 10);//设置字号
         xssfCellStyle.setFont(xssfFontContent);
         if(isDouble) {
-            xssfCellStyle.setDataFormat(xssfDataFormat.getFormat("#,#0.00")); //小数点后保留两位，可以写
+            xssfCellStyle.setDataFormat(xssfDataFormat.getFormat("#,#0.000")); //小数点后保留三位
         }
         return xssfCellStyle ;
     }
@@ -190,9 +194,9 @@ public class ExcelUtil {
      * @Param [data]
      * @return double
      **/
-    public static Double isZero(Double data) {
+    public static BigDecimal isZero(BigDecimal data) {
         if(data == null) {
-            return 0.0 ;
+            return  new BigDecimal(0);
         }
         return data ;
     }
@@ -256,6 +260,13 @@ public class ExcelUtil {
 
     }
 
+    /**
+     * @Author chenting
+     * @Description  设置response参数，以打开下载界面
+     * @Date 22:13 2020/6/9
+     * @Param [response, fileName]
+     * @return void
+     **/
     public static void setResponse(HttpServletResponse response,String fileName) {
         // 设置response参数，可以打开下载页面
         response.reset();
@@ -266,4 +277,24 @@ public class ExcelUtil {
     }
 
 
+    /**
+     * @Author chenting
+     * @Description  导入excel文件，初始化workbook 
+     * @Date 13:11 2020/6/13
+     * @Param [excelFile]
+     * @return org.apache.poi.ss.usermodel.Workbook
+     **/
+    public static Workbook initExcel(MultipartFile excelFile) throws IOException {
+        boolean isExcel2007 = false ;
+        if(excelFile.getOriginalFilename().endsWith("xlxs")) {
+            isExcel2007 = true ;
+        }
+
+//        根据文件格式(2003或者2007)来初始化
+        if(isExcel2007) {
+            return new XSSFWorkbook(excelFile.getInputStream()) ;
+        }else {
+            return new HSSFWorkbook(excelFile.getInputStream()) ;
+        }
+    }
 }

@@ -80,7 +80,19 @@ public class SysUser {
     private String loginIp;
 
     //自定义字段
+    //角色
     private List<SysRole> sysRoleList;
+
+    //权限
+    private List<SysPermission> sysPermissionList ;
+
+    public List<SysPermission> getSysPermissionList() {
+        return sysPermissionList;
+    }
+
+    public void setSysPermissionList(List<SysPermission> sysPermissionList) {
+        this.sysPermissionList = sysPermissionList;
+    }
 
     public List<SysRole> getSysRoleList() {
         return sysRoleList;
