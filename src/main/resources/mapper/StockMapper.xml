@@ -43,9 +43,9 @@
       introduction, creat_time, update_time, 
       state, remark)
     values (#{stockId,jdbcType=INTEGER}, #{stockName,jdbcType=VARCHAR}, #{stockType,jdbcType=VARCHAR}, 
-      #{unit,jdbcType=VARCHAR}, #{supplier,jdbcType=VARCHAR}, #{stockInitial,jdbcType=DECIMAL}, 
-      #{stockNow,jdbcType=DECIMAL}, #{stockLowest,jdbcType=DECIMAL}, #{retailPrice,jdbcType=DECIMAL}, 
-      #{purchasePrice,jdbcType=DECIMAL}, #{wholesalePrice,jdbcType=DECIMAL}, #{label,jdbcType=INTEGER}, 
+      #{unit,jdbcType=VARCHAR}, #{supplier,jdbcType=VARCHAR}, #{stockInitial,jdbcType=DECIMAL},
+      #{stockNow,jdbcType=DECIMAL}, #{stockLowest,jdbcType=DECIMAL}, #{retailPrice,jdbcType=DECIMAL},
+      #{purchasePrice,jdbcType=DECIMAL}, #{wholesalePrice,jdbcType=DECIMAL}, #{label,jdbcType=INTEGER},
       #{introduction,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
       #{state,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
   </insert>
@@ -234,8 +234,6 @@
   </update>
 
 
-
-
   <!--  插入库存信息 返回主键-->
 
   <insert id="insertStockSelective" useGeneratedKeys="true" keyProperty="stockId" parameterType="com.jiaxin.shop.pojo.Stock" >
@@ -349,36 +347,46 @@
   </insert>
 
   <!--  根据条件分页查询库存信息-->
-  <select id="getStockListByLabel" resultType="com.jiaxin.shop.pojo.Stock" parameterType="com.jiaxin.shop.utils.PageData" >
-    select * from stock
-    <where>
-      <if test="paramObj.stockType != null">
-        stock_type = #{paramObj.stockType,jdbcType=VARCHAR}
-      </if>
-      <if test="paramObj.label != null">
-        and label = #{paramObj.label,jdbcType=INTEGER}
-      </if>
-      <if test="paramObj.stockSearchContent != null">
-        and stock_name like #{paramObj.stockSearchContent,jdbcType=VARCHAR}
-      </if>
-      <if test="paramObj.state != null">
-        and state = #{paramObj.state,jdbcType=VARCHAR}
-      </if>
-      <if test="paramObj.stockNow != null">
-        and stock_now != #{paramObj.stockNow,jdbcType=VARCHAR}
-      </if>
-    </where>
-    <if test="page != null and size != null">
-      limit #{page},#{size}
-    </if>
+  <resultMap id="getStockListByLabelMap" type="com.jiaxin.shop.pojo.Stock" extends="BaseResultMap">
+    <collection property="stockImgList" ofType="com.jiaxin.shop.pojo.StockImg">
+      <id column="stock_img_id" property="stockImgId" jdbcType="INTEGER" />
+      <result column="stock_img_src" property="stockImgSrc" jdbcType="VARCHAR" />
+    </collection>
+  </resultMap>
+  <select id="getStockListByLabel" resultMap="getStockListByLabelMap" parameterType="com.jiaxin.shop.utils.PageData" >
+    SELECT * FROM stock s
+    LEFT JOIN stock_img si ON s.stock_id = si.stock_id
+          <where>
+              si.state = 0
+              <if test="paramObj.stockType != null">
+                 and stock_type = #{paramObj.stockType,jdbcType=VARCHAR}
+              </if>
+              <if test="paramObj.label != null">
+                  and label = #{paramObj.label,jdbcType=VARCHAR}
+              </if>
+              <if test="paramObj.stockSearchContent != null">
+                and stock_name like #{paramObj.stockSearchContent,jdbcType=VARCHAR}
+              </if>
+              <if test="paramObj.state != null">
+                and state = #{paramObj.state,jdbcType=VARCHAR}
+              </if>
+            <if test="paramObj.stockNow != null">
+              and stock_now != #{paramObj.stockNow,jdbcType=VARCHAR}
+            </if>
+          </where>
+          <if test="page != null and size != null">
+              limit #{page},#{size}
+          </if>
   </select>
 
   <!--  根据条件查询库存信息数量-->
   <select id="getStockCountByLabel" parameterType="com.jiaxin.shop.pojo.Stock" resultType="Long" >
-    select count(*) from stock
+    select count(*) from stock s
+    LEFT JOIN stock_img si ON s.stock_id = si.stock_id
     <where>
+      si.state = 0
       <if test="stockType != null">
-        stock_type = #{stockType,jdbcType=VARCHAR}
+        and stock_type = #{stockType,jdbcType=VARCHAR}
       </if>
       <if test="label != null">
         and label = #{label,jdbcType=INTEGER}

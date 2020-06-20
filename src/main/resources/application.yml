@@ -74,4 +74,6 @@ mybatis:
 
 
 #上传图片路径-本地
-upload-file-path: E:\jiaxin\images
+#upload-file-path: E:\jiaxin\images
+upload-file-path: D:\jiaxin\images
+#upload-file-path: /home/project/images

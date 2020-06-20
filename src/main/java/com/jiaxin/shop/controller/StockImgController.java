@@ -28,8 +28,8 @@ public class StockImgController {
      * @Param [stockImgFile]
      * @return java.lang.String
      **/
-    @PostMapping("uploadStockImg")
-    public Msg uploadStockImg(MultipartFile stockImgFile) throws IOException {
+    @PostMapping("/uploadStockImg")
+    public Msg uploadStockImg(@RequestParam MultipartFile stockImgFile) throws IOException {
         if(stockImgFile == null) {
             return Msg.fail("请至少上传一张图片！") ;
         }
