@@ -21,9 +21,10 @@ spring:
   application:
     name: jiaxin_shop
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/jiaxin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    #url: jdbc:mysql://127.0.0.1:3306/jiaxin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
+    url: jdbc:mysql://47.108.94.220:3306/jiaxin?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8
     username: root
-    password: root
+    password: wck1995
     driver-class-name: com.mysql.jdbc.Driver
     platform: mysql
     type: com.alibaba.druid.pool.DruidDataSource
@@ -75,5 +76,5 @@ mybatis:
 
 #上传图片路径-本地
 #upload-file-path: E:\jiaxin\images
-upload-file-path: D:\jiaxin\images
-#upload-file-path: /home/project/images
+#upload-file-path: D:\jiaxin\images
+upload-file-path: /home/project/images
