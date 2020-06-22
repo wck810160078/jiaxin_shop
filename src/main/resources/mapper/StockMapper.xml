@@ -357,7 +357,7 @@
     SELECT * FROM stock s
     LEFT JOIN stock_img si ON s.stock_id = si.stock_id
           <where>
-              si.state = 0
+              si.state = 'open'
               <if test="paramObj.stockType != null">
                  and stock_type = #{paramObj.stockType,jdbcType=VARCHAR}
               </if>
@@ -384,7 +384,7 @@
     select count(*) from stock s
     LEFT JOIN stock_img si ON s.stock_id = si.stock_id
     <where>
-      si.state = 0
+      si.state = 'open'
       <if test="stockType != null">
         and stock_type = #{stockType,jdbcType=VARCHAR}
       </if>

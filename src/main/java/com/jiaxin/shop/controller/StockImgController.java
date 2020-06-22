@@ -20,6 +20,8 @@ public class StockImgController {
 
     @Resource
     private StockImgService stockImgService ;
+    @Resource
+    private HttpServletResponse response;
 
     /**
      * @Author chenting
@@ -60,7 +62,7 @@ public class StockImgController {
      * @return void
      **/
     @GetMapping("/getImg")
-    public void getImg(@RequestParam String imgPath , HttpServletResponse response) throws IOException {
+    public void getImg(String imgPath) throws IOException {
         System.out.println("<<<<<<<<<<<<<<<<<<---------------------加载了图片："+imgPath+"------------------------>>>>>>>>>>>>");
         //加载图片
         BufferedImage bufferedImage = ImageIO.read(new FileInputStream(imgPath)) ;

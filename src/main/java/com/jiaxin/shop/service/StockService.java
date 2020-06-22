@@ -63,6 +63,9 @@ public class StockService {
             }
             return Msg.success("新增库存信息成功") ;
         }else {
+            if(stockMapper.updateByPrimaryKeySelective(stock) == 0) {
+                return Msg.fail("修改库存信息失败") ;
+            }
             if(stockImgMapper.closeImgByStockId(stockId) == 0) {
                 throw new Exception("修改图片失败") ;
             }
