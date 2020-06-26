@@ -39,20 +39,6 @@ public class StockImgController {
         return outFile == null ? Msg.fail("上传图片失败") : Msg.success("上传图片成功").setResp(outFile);
     }
 
-    /**
-     * @Author chenting
-     * @Description // 新增库存图片信息
-     * @Date 12:36 2020/6/4
-     * @Param [stockImgFile, stockId]
-     * @return com.jiaxin.shop.utils.Msg
-     **/
-//    public Msg saveStockImg(@RequestParam MultipartFile stockImgFile,Integer stockId) throws IOException {
-//        String stockImgSrc = uploadStockImg(stockImgFile) ;
-//        StockImg stockImg = new StockImg() ;
-//        stockImg.setStockId(stockId);
-//        stockImg.setStockImgSrc(stockImgSrc);
-//        return stockImgService.saveStockImg(stockImg) ;
-//    }
 
     /**
      * @Author chenting

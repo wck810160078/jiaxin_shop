@@ -17,7 +17,7 @@ spring:
     date-format: yyyy-MM-dd hh:mm:ss
     time-zone: GMT+8
     # 不返回空值给前端
-#    default-property-inclusion: non_null
+    default-property-inclusion: non_null
   application:
     name: jiaxin_shop
   datasource:
@@ -75,6 +75,6 @@ mybatis:
 
 
 #上传图片路径-本地
-#upload-file-path: E:\jiaxin\images
-#upload-file-path: D:\jiaxin\images
+#upload-file-path: E:/jiaxin/images
+#upload-file-path: D:/jiaxin/images
 upload-file-path: /home/project/images
