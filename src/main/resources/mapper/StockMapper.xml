@@ -4,8 +4,8 @@
   <resultMap id="BaseResultMap" type="com.jiaxin.shop.pojo.Stock" >
     <id column="stock_id" property="stockId" jdbcType="INTEGER" />
     <result column="stock_name" property="stockName" jdbcType="VARCHAR" />
-    <result column="stock_type" property="stockType" jdbcType="VARCHAR" />
-    <result column="unit" property="unit" jdbcType="VARCHAR" />
+    <result column="stock_type_id" property="stockTypeId" jdbcType="INTEGER" />
+    <result column="unit_id" property="unitId" jdbcType="INTEGER" />
     <result column="supplier" property="supplier" jdbcType="VARCHAR" />
     <result column="stock_initial" property="stockInitial" jdbcType="DECIMAL" />
     <result column="stock_now" property="stockNow" jdbcType="DECIMAL" />
@@ -21,12 +21,12 @@
     <result column="remark" property="remark" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    stock_id, stock_name, stock_type, unit, supplier, stock_initial, stock_now, stock_lowest, 
-    retail_price, purchase_price, wholesale_price, label, introduction, creat_time, update_time, 
-    state, remark
+    stock_id, stock_name, stock_type_id, unit_id, supplier, stock_initial, stock_now,
+    stock_lowest, retail_price, purchase_price, wholesale_price, label, introduction,
+    creat_time, update_time, state, remark
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from stock
     where stock_id = #{stockId,jdbcType=INTEGER}
@@ -36,17 +36,17 @@
     where stock_id = #{stockId,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="com.jiaxin.shop.pojo.Stock" >
-    insert into stock (stock_id, stock_name, stock_type, 
-      unit, supplier, stock_initial, 
-      stock_now, stock_lowest, retail_price, 
-      purchase_price, wholesale_price, label, 
-      introduction, creat_time, update_time, 
+    insert into stock (stock_id, stock_name, stock_type_id,
+      unit_id, supplier, stock_initial,
+      stock_now, stock_lowest, retail_price,
+      purchase_price, wholesale_price, label,
+      introduction, creat_time, update_time,
       state, remark)
-    values (#{stockId,jdbcType=INTEGER}, #{stockName,jdbcType=VARCHAR}, #{stockType,jdbcType=VARCHAR}, 
-      #{unit,jdbcType=VARCHAR}, #{supplier,jdbcType=VARCHAR}, #{stockInitial,jdbcType=DECIMAL},
+    values (#{stockId,jdbcType=INTEGER}, #{stockName,jdbcType=VARCHAR}, #{stockTypeId,jdbcType=INTEGER},
+      #{unitId,jdbcType=INTEGER}, #{supplier,jdbcType=VARCHAR}, #{stockInitial,jdbcType=DECIMAL},
       #{stockNow,jdbcType=DECIMAL}, #{stockLowest,jdbcType=DECIMAL}, #{retailPrice,jdbcType=DECIMAL},
       #{purchasePrice,jdbcType=DECIMAL}, #{wholesalePrice,jdbcType=DECIMAL}, #{label,jdbcType=INTEGER},
-      #{introduction,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{introduction,jdbcType=VARCHAR}, #{creatTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
       #{state,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.jiaxin.shop.pojo.Stock" >
@@ -58,11 +58,11 @@
       <if test="stockName != null" >
         stock_name,
       </if>
-      <if test="stockType != null" >
-        stock_type,
+      <if test="stockTypeId != null" >
+        stock_type_id,
       </if>
-      <if test="unit != null" >
-        unit,
+      <if test="unitId != null" >
+        unit_id,
       </if>
       <if test="supplier != null" >
         supplier,
@@ -111,11 +111,11 @@
       <if test="stockName != null" >
         #{stockName,jdbcType=VARCHAR},
       </if>
-      <if test="stockType != null" >
-        #{stockType,jdbcType=VARCHAR},
+      <if test="stockTypeId != null" >
+        #{stockTypeId,jdbcType=INTEGER},
       </if>
-      <if test="unit != null" >
-        #{unit,jdbcType=VARCHAR},
+      <if test="unitId != null" >
+        #{unitId,jdbcType=INTEGER},
       </if>
       <if test="supplier != null" >
         #{supplier,jdbcType=VARCHAR},
@@ -164,11 +164,11 @@
       <if test="stockName != null" >
         stock_name = #{stockName,jdbcType=VARCHAR},
       </if>
-      <if test="stockType != null" >
-        stock_type = #{stockType,jdbcType=VARCHAR},
+      <if test="stockTypeId != null" >
+        stock_type_id = #{stockTypeId,jdbcType=INTEGER},
       </if>
-      <if test="unit != null" >
-        unit = #{unit,jdbcType=VARCHAR},
+      <if test="unitId != null" >
+        unit_id = #{unitId,jdbcType=INTEGER},
       </if>
       <if test="supplier != null" >
         supplier = #{supplier,jdbcType=VARCHAR},
@@ -215,8 +215,8 @@
   <update id="updateByPrimaryKey" parameterType="com.jiaxin.shop.pojo.Stock" >
     update stock
     set stock_name = #{stockName,jdbcType=VARCHAR},
-      stock_type = #{stockType,jdbcType=VARCHAR},
-      unit = #{unit,jdbcType=VARCHAR},
+      stock_type_id = #{stockTypeId,jdbcType=INTEGER},
+      unit_id = #{unitId,jdbcType=INTEGER},
       supplier = #{supplier,jdbcType=VARCHAR},
       stock_initial = #{stockInitial,jdbcType=DECIMAL},
       stock_now = #{stockNow,jdbcType=DECIMAL},
@@ -245,11 +245,11 @@
       <if test="stockName != null" >
         stock_name,
       </if>
-      <if test="stockType != null" >
-        stock_type,
+      <if test="stockTypeId != null" >
+        stock_type_id,
       </if>
-      <if test="unit != null" >
-        unit,
+      <if test="unitId != null" >
+        unit_id,
       </if>
       <if test="supplier != null" >
         supplier,
@@ -298,32 +298,32 @@
       <if test="stockName != null" >
         #{stockName,jdbcType=VARCHAR},
       </if>
-      <if test="stockType != null" >
-        #{stockType,jdbcType=VARCHAR},
+      <if test="stockTypeId != null" >
+        #{stockTypeId,jdbcType=INTEGER},
       </if>
-      <if test="unit != null" >
-        #{unit,jdbcType=VARCHAR},
+      <if test="unitId != null" >
+        #{unitId,jdbcType=INTEGER},
       </if>
       <if test="supplier != null" >
         #{supplier,jdbcType=VARCHAR},
       </if>
       <if test="stockInitial != null" >
-        #{stockInitial,jdbcType=INTEGER},
+        #{stockInitial,jdbcType=DECIMAL},
       </if>
       <if test="stockNow != null" >
-        #{stockNow,jdbcType=INTEGER},
+        #{stockNow,jdbcType=DECIMAL},
       </if>
       <if test="stockLowest != null" >
-        #{stockLowest,jdbcType=INTEGER},
+        #{stockLowest,jdbcType=DECIMAL},
       </if>
       <if test="retailPrice != null" >
-        #{retailPrice,jdbcType=DOUBLE},
+        #{retailPrice,jdbcType=DECIMAL},
       </if>
       <if test="purchasePrice != null" >
-        #{purchasePrice,jdbcType=DOUBLE},
+        #{purchasePrice,jdbcType=DECIMAL},
       </if>
       <if test="wholesalePrice != null" >
-        #{wholesalePrice,jdbcType=DOUBLE},
+        #{wholesalePrice,jdbcType=DECIMAL},
       </if>
       <if test="label != null" >
         #{label,jdbcType=INTEGER},
@@ -358,11 +358,11 @@
     LEFT JOIN stock_img si ON s.stock_id = si.stock_id
           <where>
               si.state = 'open'
-              <if test="paramObj.stockType != null">
-                 and stock_type = #{paramObj.stockType,jdbcType=VARCHAR}
+              <if test="paramObj.stockTypeId != null">
+                 and stock_type_id = #{paramObj.stockTypeId,jdbcType=VARCHAR}
               </if>
               <if test="paramObj.label != null">
-                  and label = #{paramObj.label,jdbcType=VARCHAR}
+                  and label = #{paramObj.label,jdbcType=INTEGER}
               </if>
               <if test="paramObj.stockSearchContent != null">
                 and stock_name like #{paramObj.stockSearchContent,jdbcType=VARCHAR}
@@ -385,8 +385,8 @@
     LEFT JOIN stock_img si ON s.stock_id = si.stock_id
     <where>
       si.state = 'open'
-      <if test="stockType != null">
-        and stock_type = #{stockType,jdbcType=VARCHAR}
+      <if test="stockTypeId != null">
+        and stock_type_id = #{stockTypeId,jdbcType=VARCHAR}
       </if>
       <if test="label != null">
         and label = #{label,jdbcType=INTEGER}

@@ -1,7 +1,9 @@
 package com.jiaxin.shop.service.impl;
 
+import com.jiaxin.shop.dao.DictInfoMapper;
 import com.jiaxin.shop.dao.StockImgMapper;
 import com.jiaxin.shop.dao.StockMapper;
+import com.jiaxin.shop.pojo.DictInfo;
 import com.jiaxin.shop.pojo.Stock;
 import com.jiaxin.shop.pojo.StockImg;
 import com.jiaxin.shop.service.StockService;
@@ -37,6 +39,9 @@ public class StockServiceImpl implements StockService {
 
     @Resource
     private StockImgMapper stockImgMapper ;
+
+    @Resource
+    private DictInfoMapper dictInfoMapper ;
 
     /**
      * @Author chenting
@@ -134,9 +139,9 @@ public class StockServiceImpl implements StockService {
         //库存名称规格
         String stockName = "" ;
         //货品类别
-        String stockType = "" ;
+        Integer stockTypeId = null ;
         //主计量单位
-        String unit = "" ;
+        Integer unitId = null ;
         //库存介绍
         String introduction = "" ;
         //进货价
@@ -162,11 +167,13 @@ public class StockServiceImpl implements StockService {
             }
             Cell stockTypeCell = row.getCell(1) ;
             if(stockTypeCell != null && stockTypeCell.getCellType() == Cell.CELL_TYPE_STRING) {
-                stockType = stockTypeCell.getStringCellValue() ;
+                String stockType = stockTypeCell.getStringCellValue() ;
+                stockTypeId = dictInfoMapper.getDistIdByName(stockType,"001");
             }
             Cell unitCell = row.getCell(2) ;
             if(unitCell != null && unitCell.getCellType() == Cell.CELL_TYPE_STRING) {
-                unit = unitCell.getStringCellValue() ;
+                String unit = unitCell.getStringCellValue() ;
+                unitId = dictInfoMapper.getDistIdByName(unit,"002");
             }
             Cell introductionCell = row.getCell(3) ;
             if(introductionCell != null && introductionCell.getCellType() == Cell.CELL_TYPE_STRING) {
@@ -204,7 +211,7 @@ public class StockServiceImpl implements StockService {
             Date date = new Date() ;
             //查询库存信息是否已存在,若不存在则新增，若已存在则修改
             Stock stockOld = stockMapper.getStockByName(stockName) ;
-            Stock stockNew = new Stock(stockName,stockType,unit,supplier,stockNow,stockNow,stockLowest,retailPrice,purchasePrice,wholesalePrice,label,introduction,"open",remark) ;
+            Stock stockNew = new Stock(stockName,stockTypeId,unitId,supplier,stockNow,stockNow,stockLowest,retailPrice,purchasePrice,wholesalePrice,label,introduction,"open",remark) ;
             stockNew.setUpdateTime(date);
             if(stockOld == null) {
                 stockNew.setCreatTime(date);
@@ -270,11 +277,13 @@ public class StockServiceImpl implements StockService {
             //货品类别单元格
             XSSFCell xssfCellContent1 = xssfRowContent.createCell(1) ;
             xssfCellContent1.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false)) ;
-            xssfCellContent1.setCellValue(ExcelUtil.isNull(stock.getStockType()));
+            DictInfo dictInfo = dictInfoMapper.selectByPrimaryKey(stock.getStockTypeId());
+            xssfCellContent1.setCellValue(BaseUtil.isBlank(dictInfo.getDictInfo()));
             //主计量单位单元格
             XSSFCell xssfCellContent2 = xssfRowContent.createCell(2) ;
             xssfCellContent2.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));
-            xssfCellContent2.setCellValue(ExcelUtil.isNull(stock.getUnit()));
+            dictInfo = dictInfoMapper.selectByPrimaryKey(stock.getUnitId());
+            xssfCellContent2.setCellValue(BaseUtil.isBlank(dictInfo.getDictInfo()));
             //货品介绍单元格
             XSSFCell xssfCellContent3 = xssfRowContent.createCell(3) ;
             xssfCellContent3.setCellStyle(ExcelUtil.contentCellStyle(xssfWorkbook,false));

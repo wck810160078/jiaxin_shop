@@ -56,4 +56,12 @@ public interface DictInfoMapper {
      */
     List<DictInfo> getDictInfoList(PageData<DictInfo> pageData);
     Long getDictInfoListCount(DictInfo paramObj);
+
+    /**
+     * 通过名字获取id
+     * @param dictInfo
+     * @param dictCode
+     * @return
+     */
+    Integer getDistIdByName(String dictInfo, String dictCode);
 }

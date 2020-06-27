@@ -133,7 +133,9 @@
         dict_code = #{paramObj.dictCode,jdbcType=VARCHAR}
       </if>
     </where>
-    limit #{pageIndex},#{size}
+    <if test="pageIndex!=null and size!=null">
+      limit #{pageIndex},#{size}
+    </if>
   </select>
   <select id="getDictInfoListCount" resultType="Long" parameterType="com.jiaxin.shop.pojo.DictInfo">
     select count(dict_info_id) from dict_info di left join dict_type dt on
@@ -149,5 +151,11 @@
         dict_code = #{dictCode,jdbcType=VARCHAR}
       </if>
     </where>
+  </select>
+
+  <select id="getDistIdByName" parameterType="Map" resultType="Integer">
+    select di.dict_info_id from dict_info di
+    left join dict_type dt on di.dict_type_id = dt.dict_type_id
+    where di.dict_info = #{dictInfo} and dt.dict_code = #{dictCode}
   </select>
 </mapper>

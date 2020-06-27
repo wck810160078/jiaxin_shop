@@ -18,12 +18,12 @@ public class Stock {
     /**
      * 库存类别
      */
-    private String stockType;
+    private Integer stockTypeId;
 
     /**
      * 单位
      */
-    private String unit;
+    private Integer unitId;
 
     /**
      * 供货商
@@ -61,7 +61,7 @@ public class Stock {
     private BigDecimal wholesalePrice;
 
     /**
-     * 库存标签（1:产品、2:原料、3:包装材料）
+     * 库存标签（0:产品、1:原料、2:包装材料）
      */
     private Integer label;
 
@@ -90,6 +90,7 @@ public class Stock {
      */
     private String remark;
 
+
     //以下为自定义属性
     /**
      * 库存查询内容
@@ -112,17 +113,10 @@ public class Stock {
     public Stock() {
     }
 
-    /**
-     * @Author chenting
-     * @Description  构造函数
-     * @Date 20:59 2020/6/9
-     * @Param [stockName, stockType, unit, supplier, stockInitial, stockNow, stockLowest, retailPrice, purchasePrice, wholesalePrice, label, introduction, state, remark]
-     * @return
-     **/
-    public Stock(String stockName, String stockType, String unit, String supplier, BigDecimal stockInitial, BigDecimal stockNow, BigDecimal stockLowest, BigDecimal retailPrice, BigDecimal purchasePrice, BigDecimal wholesalePrice, Integer label, String introduction,String state, String remark) {
+    public Stock(String stockName, Integer stockTypeId, Integer unitId, String supplier, BigDecimal stockInitial, BigDecimal stockNow, BigDecimal stockLowest, BigDecimal retailPrice, BigDecimal purchasePrice, BigDecimal wholesalePrice, Integer label, String introduction, String state, String remark) {
         this.stockName = stockName;
-        this.stockType = stockType;
-        this.unit = unit;
+        this.stockTypeId = stockTypeId;
+        this.unitId = unitId;
         this.supplier = supplier;
         this.stockInitial = stockInitial;
         this.stockNow = stockNow;
@@ -188,36 +182,20 @@ public class Stock {
         this.stockName = stockName == null ? null : stockName.trim();
     }
 
-    /**
-     * 库存类别
-     * @return stock_type 库存类别
-     */
-    public String getStockType() {
-        return stockType;
+    public Integer getStockTypeId() {
+        return stockTypeId;
     }
 
-    /**
-     * 库存类别
-     * @param stockType 库存类别
-     */
-    public void setStockType(String stockType) {
-        this.stockType = stockType == null ? null : stockType.trim();
+    public void setStockTypeId(Integer stockTypeId) {
+        this.stockTypeId = stockTypeId;
     }
 
-    /**
-     * 单位
-     * @return unit 单位
-     */
-    public String getUnit() {
-        return unit;
+    public Integer getUnitId() {
+        return unitId;
     }
 
-    /**
-     * 单位
-     * @param unit 单位
-     */
-    public void setUnit(String unit) {
-        this.unit = unit == null ? null : unit.trim();
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
     }
 
     /**

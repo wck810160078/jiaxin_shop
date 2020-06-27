@@ -126,7 +126,9 @@
         and dict_name like concat('%',#{paramObj.dictName,jdbcType=VARCHAR},'%')
       </if>
     </where>
-    limit #{pageIndex},#{size}
+    <if test="pageIndex!=null and size!=null">
+      limit #{pageIndex},#{size}
+    </if>
   </select>
   <select id="getDictTypeListCount" parameterType="com.jiaxin.shop.pojo.DictType" resultType="Long">
     select count(dict_type_id) from dict_type
