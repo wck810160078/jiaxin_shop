@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jiaxin.shop.dao.DictTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.jiaxin.shop.pojo.DictType" >
+    <id column="dict_type_id" property="dictTypeId" jdbcType="INTEGER" />
+    <result column="dict_code" property="dictCode" jdbcType="VARCHAR" />
+    <result column="dict_name" property="dictName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="state" property="state" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    dict_type_id, dict_code, dict_name, remark, create_time, update_time, state
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from dict_type
+    where dict_type_id = #{dictTypeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from dict_type
+    where dict_type_id = #{dictTypeId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.jiaxin.shop.pojo.DictType" >
+    insert into dict_type (dict_type_id, dict_code, dict_name, 
+      remark, create_time, update_time, 
+      state)
+    values (#{dictTypeId,jdbcType=INTEGER}, #{dictCode,jdbcType=VARCHAR}, #{dictName,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{state,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.jiaxin.shop.pojo.DictType" >
+    insert into dict_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="dictTypeId != null" >
+        dict_type_id,
+      </if>
+      <if test="dictCode != null" >
+        dict_code,
+      </if>
+      <if test="dictName != null" >
+        dict_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="state != null" >
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="dictTypeId != null" >
+        #{dictTypeId,jdbcType=INTEGER},
+      </if>
+      <if test="dictCode != null" >
+        #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        #{state,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jiaxin.shop.pojo.DictType" >
+    update dict_type
+    <set >
+      <if test="dictCode != null" >
+        dict_code = #{dictCode,jdbcType=VARCHAR},
+      </if>
+      <if test="dictName != null" >
+        dict_name = #{dictName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null" >
+        state = #{state,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where dict_type_id = #{dictTypeId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.jiaxin.shop.pojo.DictType" >
+    update dict_type
+    set dict_code = #{dictCode,jdbcType=VARCHAR},
+      dict_name = #{dictName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=VARCHAR}
+    where dict_type_id = #{dictTypeId,jdbcType=INTEGER}
+  </update>
+
+<!--  分页-->
+  <select id="getDictTypeList" parameterType="com.jiaxin.shop.utils.PageData" resultType="com.jiaxin.shop.pojo.DictType">
+    select dict_code,dict_name from dict_type
+    <where>
+      <if test="paramObj.dictCode != null">
+        dict_code like concat('%',#{paramObj.dictCode,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="paramObj.dictName != null">
+        and dict_name like concat('%',#{paramObj.dictName,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+    limit #{pageIndex},#{size}
+  </select>
+  <select id="getDictTypeListCount" parameterType="com.jiaxin.shop.pojo.DictType" resultType="Long">
+    select count(dict_type_id) from dict_type
+    <where>
+      <if test="dictCode != null">
+        dict_code like concat('%',#{dictCode,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="dictName != null">
+        and dict_name like concat('%',#{dictName,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+  </select>
+</mapper>
